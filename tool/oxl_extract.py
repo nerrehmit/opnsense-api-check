@@ -22,6 +22,7 @@ import os
 import re
 import sys
 import tempfile
+import textwrap
 
 sys.dont_write_bytecode = True  # do not litter the checkout with __pycache__
 
@@ -169,6 +170,105 @@ def service_calls() -> list:
     return calls
 
 
+def value_translations(mod, src: str, opts: dict) -> None:
+    """
+    Record in opts[<option>]['sent_map'] how a module rewrites an argument's choices before sending them:
+    - a module-level mapping applied as MAP[...] whose keys are the option's choices
+      (e.g. MONTH_MAPPING = {1: 'JAN', ...})
+    - a mapping of option -> choice that the module blanks with module.params[..] = ''
+      (e.g. BLANK_VALUES = {'errors': 'squid'} for fields whose empty value is the API default)
+    - module.params['x'] = module.params['x'].upper() / .lower()
+    """
+    maps = {}
+    for name, obj in vars(mod).items():
+        if isinstance(obj, dict) and obj and name.isupper() and re.search(rf'^{name}\s*=', src, re.M) \
+                and len(re.findall(rf'\b{name}\b', src)) > 1:  # defined here and used
+            maps[name] = obj
+    blanking = re.search(r"module\.params\[[^\]]+\]\s*=\s*''", src) is not None
+
+    for opt, spec in opts.items():
+        choices = [str(c) for c in spec.get('choices') or [] if c not in ('', None)]
+        if not choices:
+            continue
+        # value mappings: prefer the map whose keys are exactly the choices
+        cands = [(n, m) for n, m in maps.items() if set(choices) <= {str(k) for k in m}]
+        exact = [(n, m) for n, m in cands if {str(k) for k in m} == set(choices)]
+        pick = exact if len(exact) == 1 else (cands if len(cands) == 1 else [])
+        if pick and all(isinstance(v, (str, int, bool)) for v in pick[0][1].values()):
+            n, m = pick[0]
+            spec['sent_map'] = {str(k): str(v) for k, v in m.items() if str(k) in choices}
+            spec['translated_by'] = n
+            continue
+        if blanking:
+            for n, m in maps.items():
+                if isinstance(m.get(opt), str) and m[opt] in choices:
+                    spec['sent_map'] = {m[opt]: ''}
+                    spec['translated_by'] = f"{n} (sent as empty value)"
+                    break
+            if 'sent_map' in spec:
+                continue
+        case = re.search(rf"module\.params\[(['\"]){opt}\1\]\s*=\s*module\.params\[\1{opt}\1\]\.(upper|lower)\(\)", src)
+        if case:
+            fn = str.upper if case.group(2) == 'upper' else str.lower
+            spec['sent_map'] = {c: fn(c) for c in choices}
+            spec['translated_by'] = f'.{case.group(2)}()'
+
+
+READ_METHODS = ('search', 'search_call', 'get_existing', 'simplify_existing')
+
+
+def code_info(cls, overrides: list) -> dict:
+    """
+    What the class's own (overridden) methods do with API keys and fields, so the checker can tell
+    "reads the response in its own way" from "uses API_KEY_PATH / FIELDS_TRANSLATE like the base class".
+    """
+    def method_tree(name):
+        for c in cls.__mro__:
+            if name in c.__dict__:
+                try:
+                    return ast.parse(textwrap.dedent(inspect.getsource(c.__dict__[name])))
+                except (OSError, TypeError, SyntaxError):
+                    return None
+        return None
+
+    def strings(tree):
+        out = set()
+        for n in ast.walk(tree):
+            if isinstance(n, ast.Constant) and isinstance(n.value, str):
+                out.add(n.value)
+            elif isinstance(n, ast.Attribute) and isinstance(n.value, ast.Name) and n.value.id == 'self' \
+                    and isinstance(getattr(cls, n.attr, None), str):
+                out.add(getattr(cls, n.attr))
+        return out
+
+    def reads_same_key(expr, key):
+        return any(isinstance(n, ast.Subscript) and isinstance(n.value, ast.Name)
+                   and isinstance(n.slice, ast.Constant) and n.slice.value == key for n in ast.walk(expr))
+
+    info = {'read_uses_key_path': True, 'replaced_fields': [], 'build_refs': []}
+    read_src, replaced = '', set()
+    for name in overrides:
+        tree = method_tree(name)
+        if tree is None:
+            continue
+        if name in READ_METHODS:
+            read_src += ast.unparse(tree)
+            for n in ast.walk(tree):
+                # x['field'] = <value not derived from x['field']>: the class fills the field itself
+                if isinstance(n, ast.Assign):
+                    for t in n.targets:
+                        if isinstance(t, ast.Subscript) and isinstance(t.slice, ast.Constant) \
+                                and isinstance(t.slice.value, str) and not reads_same_key(n.value, t.slice.value):
+                            replaced.add(t.slice.value)
+        if name == 'build_request':
+            info['build_refs'] = sorted(strings(tree))
+    if set(overrides) & {'search', 'search_call', 'get_existing'} and not any(
+            k in read_src for k in ('API_KEY_PATH', '_base_get_existing', 'self.search(', 'super(')):
+        info['read_uses_key_path'] = False
+    info['replaced_fields'] = sorted(replaced)
+    return info
+
+
 def extract(collection: str) -> dict:
     _setup_path(collection)
     main_dir = os.path.join(collection, 'plugins', 'module_utils', 'main')
@@ -194,6 +294,7 @@ def extract(collection: str) -> dict:
                             'process', 'check', 'simplify_existing', 'build_request', 'enable', 'disable')
                 if _defines(cls, m)
             )
+            entry['code'] = code_info(cls, entry['overrides'])
             classes[f'{f[:-3]}.{name}'] = entry
 
     modules = {}
@@ -230,6 +331,8 @@ def extract(collection: str) -> dict:
                 continue
             opts[opt] = {k: _jsonable(d[k]) for k in ('type', 'choices', 'aliases', 'default', 'required', 'elements')
                          if k in d}
+        with open(os.path.join(mod_dir, f), encoding='utf-8') as fh:
+            value_translations(mod, fh.read(), opts)
         modules[f[:-3]] = {'classes': sorted(set(used)), 'options': opts}
 
     calls = expand_dynamic(inline_calls(collection), modules)

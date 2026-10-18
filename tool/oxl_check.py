@@ -125,6 +125,10 @@ class Checker:
     def add(self, sev, where, code, msg, **extra):
         self.findings.append({'severity': sev, 'where': where, 'code': code, 'message': msg, **extra})
 
+    def handled(self, where, code, msg, why, **extra):
+        """A finding the class's own code takes care of: kept as a note, not counted as error/warning"""
+        self.add('INFO', where, 'HANDLED_IN_CODE', f'{code}: {msg} - handled in code: {why}', **extra)
+
     # ------------------------------------------------------------------ endpoints
     def endpoint(self, where, module, controller, command, role, sev='ERROR'):
         ctrl, problem = self.api.controller(module, controller)
@@ -160,6 +164,18 @@ class Checker:
         read_note = f" (class has custom {', '.join(custom_read)}(): verify)" if custom_read else ''
         write_note = f" (class has custom {', '.join(custom_write)}(): verify)" if custom_write else ''
         cmds = c.get('CMDS') or {}
+        code = c.get('code') or {}
+        # the class lists its entries in its own search_call()/get_existing() without using API_KEY_PATH
+        read_bypass = bool(custom_read) and not code.get('read_uses_key_path', True)
+        bypass_why = f"{', '.join(custom_read)}() read(s) the response without API_KEY_PATH"
+
+        def read_finding(sev, msg):
+            if read_bypass:
+                msg = msg.replace(read_note, '').replace(' - the module will not find its entries in the response', '')
+                self.handled(where, 'KEY_PATH', msg, bypass_why)
+            else:
+                self.add(sev, where, 'KEY_PATH', msg)
+
         mod, cont = c['API_MOD'], c['API_CONT']
         mod_get, cont_get = c.get('API_MOD_GET', mod), c.get('API_CONT_GET', cont)
 
@@ -195,9 +211,9 @@ class Checker:
             if act is not None and gb and all(gb[0]['args']):
                 k, path = gb[0]['args']
                 if read_segs[:1] != [k]:
-                    self.add(read_sev, where, 'KEY_PATH',
-                             f"detail '{cmds.get('detail')}' returns {{'{k}': ...}} (getBase) but API_KEY_PATH"
-                             f"{'_GET' if c.get('API_KEY_PATH_GET') else ''} is '{read_key}'{read_note}")
+                    read_finding(read_sev,
+                                 f"detail '{cmds.get('detail')}' returns {{'{k}': ...}} (getBase) but API_KEY_PATH"
+                                 f"{'_GET' if c.get('API_KEY_PATH_GET') else ''} is '{read_key}'{read_note}")
                 node = resolve(items, path.split('.') + read_segs[1:])
                 node_desc = f"{get_ctrl['model_class']}:{path}"
             elif act is not None:
@@ -209,18 +225,18 @@ class Checker:
             if act['defined_in'] == BASE_MODEL_CTRL or calls_parent:
                 root = get_ctrl.get('model_name')
                 if read_segs[:1] != [root]:
-                    self.add(read_sev, where, 'KEY_PATH',
-                             f"'{search}' returns {{'{root}': ...}} but API_KEY_PATH is '{read_key}'{read_note}")
+                    read_finding(read_sev,
+                                 f"'{search}' returns {{'{root}': ...}} but API_KEY_PATH is '{read_key}'{read_note}")
                 node = resolve(items, read_segs[1:])
                 node_desc = f"{get_ctrl['model_class']}:{'.'.join(read_segs[1:]) or '<root>'}"
             else:
                 # custom get(): the keys it returns must at least be mentioned in its body
                 missing = [s for s in read_segs[1:] if s not in act['tokens']]
                 if missing:
-                    self.add(read_sev, where, 'KEY_PATH',
-                             f"'{search}' is overridden in {act['defined_in'].rsplit(chr(92), 1)[-1]} and never "
-                             f"references {missing} from API_KEY_PATH '{read_key}' - the module will not find "
-                             f"its entries in the response{read_note}")
+                    read_finding(read_sev,
+                                 f"'{search}' is overridden in {act['defined_in'].rsplit(chr(92), 1)[-1]} and never "
+                                 f"references {missing} from API_KEY_PATH '{read_key}' - the module will not find "
+                                 f"its entries in the response{read_note}")
                 node = resolve(items, read_segs[1:])
                 node_desc = f"{(get_ctrl or {}).get('model_class')}:{'.'.join(read_segs[1:])}"
 
@@ -230,8 +246,7 @@ class Checker:
             node_desc = f"{get_ctrl['model_class']}:{read_key}"
             guessed = True
         if node_desc and node is None:
-            self.add('WARN' if guessed else read_sev, where, 'KEY_PATH',
-                     f"path {node_desc} does not exist in the model{read_note}")
+            read_finding('WARN' if guessed else read_sev, f"path {node_desc} does not exist in the model{read_note}")
 
         # ---- where it writes to
         wrap = (c.get('API_KEY_PATH_REQ') or '').split('.')[0] if c.get('API_KEY_PATH_REQ') \
@@ -242,13 +257,21 @@ class Checker:
                 continue
             calls = [b for b in act['base_calls'] if b['call'] in ('addBase', 'setBase')]
             if calls and calls[0]['args'][0]:
-                if wrap != calls[0]['args'][0]:
+                if wrap != calls[0]['args'][0] and calls[0]['args'][0] in code.get('build_refs', []):
+                    self.handled(where, 'KEY_PATH', f"'{cmds[role]}' expects the payload under "
+                                 f"'{calls[0]['args'][0]}', API_KEY_PATH implies '{wrap}'",
+                                 f"build_request() builds the payload under '{calls[0]['args'][0]}'")
+                elif wrap != calls[0]['args'][0]:
                     self.add(write_sev, where, 'KEY_PATH',
                              f"'{cmds[role]}' expects the payload under '{calls[0]['args'][0]}' "
                              f"but the module sends it under '{wrap}'{write_note}")
             elif act['defined_in'] == BASE_MODEL_CTRL and ctrls[role] is not None:
                 root = ctrls[role].get('model_name')
-                if wrap != root:
+                if wrap != root and root in code.get('build_refs', []):
+                    self.handled(where, 'KEY_PATH', f"'{cmds[role]}' (generic setAction) expects the payload "
+                                 f"under '{root}', API_KEY_PATH implies '{wrap}'",
+                                 f"build_request() builds the payload under '{root}'")
+                elif wrap != root:
                     self.add(write_sev, where, 'KEY_PATH',
                              f"'{cmds[role]}' (generic setAction) expects the payload under '{root}' "
                              f"but the module sends it under '{wrap}'{write_note}")
@@ -278,7 +301,17 @@ class Checker:
                 used.add(hit[0])
                 continue
             names = ' / '.join('.'.join(a) for a in alts)
-            if f in optional:
+            code = c.get('code') or {}
+            ov = set(c.get('overrides') or [])
+            if f in code.get('replaced_fields', []) and 'build_request' in ov:
+                self.handled(where, 'FIELD_MISSING', f"field '{f}' -> '{names}' not in {node_desc}",
+                             'the class fills it from other API fields when reading and builds the request '
+                             'itself (build_request)', field=f)
+            elif f == c.get('FIELD_PK') and sev != 'ERROR':  # custom or guessed read path
+                self.handled(where, 'FIELD_MISSING', f"field '{f}' -> '{names}' not in {node_desc}",
+                             'it is the entry key (FIELD_PK) taken from the search response and passed as URL '
+                             'parameter, not a model field', field=f)
+            elif f in optional:
                 self.add('INFO', where, 'FIELD_MISSING_OPTIONAL',
                          f"field '{f}' -> '{names}' not in {node_desc} (declared optional)", field=f)
             else:
@@ -313,13 +346,27 @@ class Checker:
                 if not fld or 'options' not in fld:
                     continue
                 api_vals = set(fld['options'])
-                sent = {str(vmap.get(opt, {}).get(ch, ch)) for ch in choices if ch not in ('', None)}
-                bad = sorted(sent - api_vals)
+                if not fld.get('required'):
+                    api_vals_ok = api_vals | {''}  # empty = the model's BlankDesc / default
+                else:
+                    api_vals_ok = api_vals
+                # value rewrites done in the Ansible module itself before the class sees the parameter
+                sent_map = spec.get('sent_map') or {}
+                sent_of = {str(ch): sent_map.get(str(ch), str(ch)) for ch in choices if ch not in ('', None)}
+                sent = {str(vmap.get(opt, {}).get(v, v)) for v in sent_of.values()}
+                bad = sorted(sent - api_vals_ok)
                 new = sorted(api_vals - sent - {''})
+                via = f" after translation by {spec['translated_by']}" if sent_map else ''
                 if bad:
+                    shown = sorted(ch for ch, v in sent_of.items() if str(vmap.get(opt, {}).get(v, v)) in bad)
                     self.add(sev, where, 'CHOICE_INVALID',
-                             f"option '{opt}' allows {bad} which {node_desc}.{'.'.join(alts[0])} rejects "
-                             f"(valid: {sorted(api_vals)}){note}", field=opt)
+                             f"option '{opt}' allows {shown}{' (sent as ' + str(bad) + ')' if via else ''} which "
+                             f"{node_desc}.{'.'.join(alts[0])} rejects (valid: {sorted(api_vals)}){via}{note}",
+                             field=opt)
+                elif sent_map and set(sent_map) != set(sent_map.values()):
+                    self.add('INFO', where, 'HANDLED_IN_CODE',
+                             f"CHOICE_INVALID: option '{opt}' choices are rewritten by {spec['translated_by']} "
+                             f"before sending, and every translated value is valid", field=opt)
                 if new:
                     self.add('INFO', where, 'CHOICE_NEW',
                              f"option '{opt}': API also accepts {new}", field=opt)

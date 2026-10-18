@@ -1,12 +1,10 @@
 # oxlorg.opnsense vs OPNsense 26.1.4
 
 156 module classes and 374 inline calls checked.
-**43 errors, 23 warnings, 127 notes.**
+**32 errors, 8 warnings, 146 notes.**
 
-## ERROR (43)
+## ERROR (32)
 
-### bind_blocklist.Blocklist
-- **ERROR** `CHOICE_INVALID` option 'block' allows ['AdAway List', 'AdGuard List', 'Blocklist.site Ads', 'Blocklist.site Fraud', 'Blocklist.site Phishing', 'Cameleon List', 'EMD Malicious Domains List', 'Easy List', 'Easyprivacy List', 'Malwaredomain List', 'NoCoin List', 'PornTop1M List', 'Ransomware Tracker List', 'Simple Ad List', 'Simple Tracker List', 'Steven Black List', 'WindowsSpyBlocker (extra)', 'WindowsSpyBlocker (spy)', 'WindowsSpyBlocker (update)', 'YoYo List', 'hpHosts Ads', 'hpHosts FSA', 'hpHosts PSH', 'hpHosts PUP'] which OPNsense\Bind\Dnsbl:<root>.type rejects (valid: ['aa', 'ag', 'bla', 'blf', 'blp', 'ca', 'el', 'emd', 'ep', 'hpa', 'hpf', 'hpp', 'hup', 'mw', 'nc', 'pt', 'rw', 'sa', 'sb', 'st', 'ws', 'wse', 'wsu', 'yy'])
 ### haproxy_cpu.HaproxyCpu
 - **ERROR** `CHOICE_INVALID` option 'thread_id' allows ['x0'] which OPNsense\HAProxy\HAProxy:cpus.cpu.thread_id rejects (valid: ['all', 'even', 'odd', 'x1', 'x10', 'x11', 'x12', 'x13', 'x14', 'x15', 'x16', 'x17', 'x18', 'x19', 'x2', 'x20', 'x21', 'x22', 'x23', 'x24', 'x25', 'x26', 'x27', 'x28', 'x29', 'x3', 'x30', 'x31', 'x32', 'x33', 'x34', 'x35', 'x36', 'x37', 'x38', 'x39', 'x4', 'x40', 'x41', 'x42', 'x43', 'x44', 'x45', 'x46', 'x47', 'x48', 'x49', 'x5', 'x50', 'x51', 'x52', 'x53', 'x54', 'x55', 'x56', 'x57', 'x58', 'x59', 'x6', 'x60', 'x61', 'x62', 'x63', 'x7', 'x8', 'x9'])
 ### haproxy_fcgi.HaproxyFcgi
@@ -18,7 +16,6 @@
 - **ERROR** `CHOICE_INVALID` option 'mode' allows ['dco'] which OPNsense\OpenVPN\OpenVPN:Instances.Instance.dev_type rejects (valid: ['ovpn', 'tap', 'tun'])
 ### openvpn_server.Server
 - **ERROR** `CHOICE_INVALID` option 'mode' allows ['dco'] which OPNsense\OpenVPN\OpenVPN:Instances.Instance.dev_type rejects (valid: ['ovpn', 'tap', 'tun'])
-- **ERROR** `CHOICE_INVALID` option 'user_cn_strict' allows ['False', 'True', 'case-insensitive', 'ci', 'false', 'no', 'true', 'yes'] which OPNsense\OpenVPN\OpenVPN:Instances.Instance.strictusercn rejects (valid: ['0', '1', '2'])
 ### plugins/modules/frr_diagnostic.py:57 (bgproute)
 - **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/bgproute: no action 'bgprouteAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
 ### plugins/modules/frr_diagnostic.py:57 (bgproute4)
@@ -71,46 +68,14 @@
 - **ERROR** `ENDPOINT_MISSING` inline call: /api/tinc/service/status: no action 'statusAction' in ServiceController (controllers/OPNsense/Tinc/Api/ServiceController.php)
 ### service udp_broadcast_relay/reload
 - **ERROR** `ENDPOINT_MISSING` inline call: /api/udpbroadcastrelay/service/reconfigure: no action 'reconfigureAction' in ServiceController (controllers/OPNsense/UDPBroadcastRelay/Api/ServiceController.php)
-### webproxy_cache.Cache
-- **ERROR** `CHOICE_INVALID` option 'memory_cache_mode' allows ['default'] which OPNsense\Proxy\Proxy:general.cache.local.memory_cache_mode rejects (valid: ['always', 'disk', 'network'])
-### webproxy_general.General
-- **ERROR** `CHOICE_INVALID` option 'errors' allows ['squid'] which OPNsense\Proxy\Proxy:general.error_pages rejects (valid: ['custom', 'opnsense'])
-- **ERROR** `CHOICE_INVALID` option 'handling_forwarded_for' allows ['default'] which OPNsense\Proxy\Proxy:general.forwardedForHandling rejects (valid: ['delete', 'off', 'on', 'transparent', 'truncate'])
-- **ERROR** `CHOICE_INVALID` option 'log_target' allows ['file'] which OPNsense\Proxy\Proxy:general.logging.target rejects (valid: ['file_extendend', 'file_json', 'syslog', 'syslog_json'])
-### webproxy_pac_match.Match
-- **ERROR** `CHOICE_INVALID` option 'month_from' allows ['1', '10', '11', '12', '2', '3', '4', '5', '6', '7', '8', '9'] which OPNsense\Proxy\Proxy:pac.match.date_from rejects (valid: ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP'])
-- **ERROR** `CHOICE_INVALID` option 'month_to' allows ['1', '10', '11', '12', '2', '3', '4', '5', '6', '7', '8', '9'] which OPNsense\Proxy\Proxy:pac.match.date_to rejects (valid: ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP'])
-- **ERROR** `CHOICE_INVALID` option 'weekday_from' allows ['1', '2', '3', '4', '5', '6', '7'] which OPNsense\Proxy\Proxy:pac.match.weekday_from rejects (valid: ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED'])
-- **ERROR** `CHOICE_INVALID` option 'weekday_to' allows ['1', '2', '3', '4', '5', '6', '7'] which OPNsense\Proxy\Proxy:pac.match.weekday_to rejects (valid: ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED'])
-### webproxy_pac_proxy.Proxy
-- **ERROR** `CHOICE_INVALID` option 'type' allows ['direct', 'http', 'https', 'proxy', 'socks', 'socks4', 'socks5'] which OPNsense\Proxy\Proxy:pac.proxy.proxy_type rejects (valid: ['DIRECT', 'HTTP', 'HTTPS', 'PROXY', 'SOCKS', 'SOCKS4', 'SOCKS5'])
 
-## WARN (23)
+## WARN (8)
 
-### ids_general.General
-- **WARN** `FIELD_MISSING` field 'profile' -> 'profile' not in OPNsense\IDS\IDS:general: reading existing entries will fail or the value is silently ignored (class has custom search_call(): verify)
-- **WARN** `FIELD_MISSING` field 'profile_toclient_groups' -> 'profile_toclient_groups' not in OPNsense\IDS\IDS:general: reading existing entries will fail or the value is silently ignored (class has custom search_call(): verify)
-- **WARN** `FIELD_MISSING` field 'profile_toserver_groups' -> 'profile_toserver_groups' not in OPNsense\IDS\IDS:general: reading existing entries will fail or the value is silently ignored (class has custom search_call(): verify)
-- **WARN** `KEY_PATH` 'set' (generic setAction) expects the payload under 'ids' but the module sends it under 'general' (class has custom build_request(): verify)
-### ids_policy.Policy
-- **WARN** `KEY_PATH` detail 'get_policy' returns {'policy': ...} (getBase) but API_KEY_PATH is 'policies.policy' (class has custom get_existing, search_call(): verify)
-- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:policies.policy does not exist in the model (class has custom get_existing, search_call(): verify)
-### ids_policy_rule.Rule
-- **WARN** `KEY_PATH` detail 'get_policy_rule' returns {'rule': ...} (getBase) but API_KEY_PATH is 'policies.rule' (class has custom search_call(): verify)
-- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:rules.rule does not exist in the model (class has custom search_call(): verify)
-### ids_ruleset.Ruleset
-- **WARN** `KEY_PATH` 'list_rulesets' is overridden in SettingsController and never references ['ruleset'] from API_KEY_PATH 'rulesets.ruleset' - the module will not find its entries in the response (class has custom search_call(): verify)
-- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:ruleset does not exist in the model (class has custom search_call(): verify)
-### ids_user_rule.Rule
-- **WARN** `KEY_PATH` detail 'get_user_rule' returns {'rule': ...} (getBase) but API_KEY_PATH is 'userDefinedRules.rule' (class has custom get_existing, search_call(): verify)
-- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:userDefinedRules.rule does not exist in the model (class has custom get_existing, search_call(): verify)
 ### interface_lagg.Lagg
 - **WARN** `CHOICE_INVALID` option 'lacp_strict' allows ['no', 'yes'] which OPNsense\Interfaces\Lagg:lagg.lacp_strict rejects (valid: ['', '0', '1']) (class has custom update(): verify)
 - **WARN** `CHOICE_INVALID` option 'use_flowid' allows ['no', 'yes'] which OPNsense\Interfaces\Lagg:lagg.use_flowid rejects (valid: ['', '0', '1']) (class has custom update(): verify)
 ### interface_vip.Vip
 - **WARN** `CHOICE_INVALID` option 'mode' allows ['other'] which OPNsense\Interfaces\Vip:vip.mode rejects (valid: ['carp', 'ipalias', 'proxyarp']) (class has custom get_existing(): verify)
-### privilege.Privilege
-- **WARN** `FIELD_MISSING` field 'id' -> 'id' not in OPNsense\Auth\Priv:priv: reading existing entries will fail or the value is silently ignored (key path guessed)
 ### route.Route
 - **WARN** `FIELD_MISSING` field 'enabled' -> 'enabled' not in OPNsense\Routes\Route:route: reading existing entries will fail or the value is silently ignored (class has custom simplify_existing(): verify)
 ### unbound_dot.DnsOverTls
@@ -118,11 +83,8 @@
 - **WARN** `ENDPOINT_MAGIC` CMDS['del']: /api/unbound/settings/delDot: no such action, only reachable through the backwards-compatibility __call() in SettingsController (likely deprecated)
 - **WARN** `ENDPOINT_MAGIC` CMDS['set']: /api/unbound/settings/setDot: no such action, only reachable through the backwards-compatibility __call() in SettingsController (likely deprecated)
 - **WARN** `ENDPOINT_MAGIC` CMDS['toggle']: /api/unbound/settings/toggleDot: no such action, only reachable through the backwards-compatibility __call() in SettingsController (likely deprecated)
-### unbound_host.Host
-- **WARN** `FIELD_MISSING` field 'prio' -> 'prio' not in OPNsense\Unbound\Unbound:hosts.host: reading existing entries will fail or the value is silently ignored (class has custom simplify_existing(): verify)
-- **WARN** `FIELD_MISSING` field 'value' -> 'value' not in OPNsense\Unbound\Unbound:hosts.host: reading existing entries will fail or the value is silently ignored (class has custom simplify_existing(): verify)
 
-## Notes: coverage gaps and unverifiable spots (127)
+## Notes: coverage gaps and unverifiable spots (146)
 
 ### acme_account.Account
 - **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: id, key, statusCode, statusLastUpdate
@@ -140,7 +102,7 @@
 - **INFO** `CHOICE_NEW` option 'type': API also accepts ['asn', 'authgroup']
 - **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: categories, expire, proto
 ### bind_blocklist.Blocklist
-- **INFO** `CHOICE_NEW` option 'block': API also accepts ['aa', 'ag', 'bla', 'blf', 'blp', 'ca', 'el', 'emd', 'ep', 'hpa', 'hpf', 'hpp', 'hup', 'mw', 'nc', 'pt', 'rw', 'sa', 'sb', 'st', 'ws', 'wse', 'wsu', 'yy']
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'block' choices are rewritten by BL_MAPPING before sending, and every translated value is valid
 ### bind_domain.Domain
 - **INFO** `CHOICE_NEW` option 'mode': API also accepts ['forward']
 - **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: allowrndctransfer, allowrndcupdate, forwardserver, serial
@@ -233,6 +195,22 @@
 - **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: pfsyncdefer
 ### ids_general.General
 - **INFO** `FIELDS_NOT_SUPPORTED` 10 API field(s) not covered: detect.Profile, detect.toclient_groups, detect.toserver_groups, eveLog.http.dumpAllHeaders, eveLog.http.enable, eveLog.http.extended, eveLog.tls.custom, eveLog.tls.enable, eveLog.tls.extended, eveLog.tls.sessionResumption
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: 'set' (generic setAction) expects the payload under 'ids', API_KEY_PATH implies 'general' - handled in code: build_request() builds the payload under 'ids'
+- **INFO** `HANDLED_IN_CODE` FIELD_MISSING: field 'profile' -> 'profile' not in OPNsense\IDS\IDS:general - handled in code: the class fills it from other API fields when reading and builds the request itself (build_request)
+- **INFO** `HANDLED_IN_CODE` FIELD_MISSING: field 'profile_toclient_groups' -> 'profile_toclient_groups' not in OPNsense\IDS\IDS:general - handled in code: the class fills it from other API fields when reading and builds the request itself (build_request)
+- **INFO** `HANDLED_IN_CODE` FIELD_MISSING: field 'profile_toserver_groups' -> 'profile_toserver_groups' not in OPNsense\IDS\IDS:general - handled in code: the class fills it from other API fields when reading and builds the request itself (build_request)
+### ids_policy.Policy
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: detail 'get_policy' returns {'policy': ...} (getBase) but API_KEY_PATH is 'policies.policy' - handled in code: get_existing, search_call() read(s) the response without API_KEY_PATH
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: path OPNsense\IDS\IDS:policies.policy does not exist in the model - handled in code: get_existing, search_call() read(s) the response without API_KEY_PATH
+### ids_policy_rule.Rule
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: detail 'get_policy_rule' returns {'rule': ...} (getBase) but API_KEY_PATH is 'policies.rule' - handled in code: search_call() read(s) the response without API_KEY_PATH
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: path OPNsense\IDS\IDS:rules.rule does not exist in the model - handled in code: search_call() read(s) the response without API_KEY_PATH
+### ids_ruleset.Ruleset
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: 'list_rulesets' is overridden in SettingsController and never references ['ruleset'] from API_KEY_PATH 'rulesets.ruleset' - handled in code: search_call() read(s) the response without API_KEY_PATH
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: path OPNsense\IDS\IDS:ruleset does not exist in the model - handled in code: search_call() read(s) the response without API_KEY_PATH
+### ids_user_rule.Rule
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: detail 'get_user_rule' returns {'rule': ...} (getBase) but API_KEY_PATH is 'userDefinedRules.rule' - handled in code: get_existing, search_call() read(s) the response without API_KEY_PATH
+- **INFO** `HANDLED_IN_CODE` KEY_PATH: path OPNsense\IDS\IDS:userDefinedRules.rule does not exist in the model - handled in code: get_existing, search_call() read(s) the response without API_KEY_PATH
 ### interface_bridge.Bridge
 - **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/interfaces/bridge_settings/toggleItem: no action 'toggleItemAction' in BridgeSettingsController (controllers/OPNsense/Interfaces/Api/BridgeSettingsController.php)
 - **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: bridgeif
@@ -281,13 +259,14 @@
 - **INFO** `CHOICE_NEW` option 'mode': API also accepts ['ovpn']
 - **INFO** `CHOICE_NEW` option 'options': API also accepts ['block-ipv6', 'explicit-exit-notify', 'fast-io']
 - **INFO** `CHOICE_NEW` option 'push_options': API also accepts ['block-ipv6', 'explicit-exit-notify']
-- **INFO** `CHOICE_NEW` option 'user_cn_strict': API also accepts ['0', '1', '2']
 - **INFO** `FIELDS_NOT_SUPPORTED` 11 API field(s) not covered: bridge_gateway, bridge_pool, carp_depend_on, compress_migrate, http-proxy, password, push_excluded_routes, push_inactive, remote, username, verify-x509-name
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'user_cn_strict' choices are rewritten by USER_CN_STRICT_MAP before sending, and every translated value is valid
 ### package.Package
 - **INFO** `UNUSED` no Ansible module uses this class; skipped
 ### postfix_general.General
 - **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: tlswrappermode
 ### privilege.Privilege
+- **INFO** `HANDLED_IN_CODE` FIELD_MISSING: field 'id' -> 'id' not in OPNsense\Auth\Priv:priv - handled in code: it is the entry key (FIELD_PK) taken from the search response and passed as URL parameter, not a model field
 - **INFO** `UNVERIFIED` detail action 'get_item' is custom (no getBase); key path not verified
 ### route.Route
 - **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: disabled
@@ -315,6 +294,8 @@
 ### unbound_host.Host
 - **INFO** `CHOICE_NEW` option 'record_type': API also accepts ['TXT']
 - **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: addptr, mx, mxprio, server, ttl, txtdata
+- **INFO** `HANDLED_IN_CODE` FIELD_MISSING: field 'prio' -> 'prio' not in OPNsense\Unbound\Unbound:hosts.host - handled in code: the class fills it from other API fields when reading and builds the request itself (build_request)
+- **INFO** `HANDLED_IN_CODE` FIELD_MISSING: field 'value' -> 'value' not in OPNsense\Unbound\Unbound:hosts.host - handled in code: the class fills it from other API fields when reading and builds the request itself (build_request)
 ### user.User
 - **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: apikeys, dashboard, otp_seed, pwd_changed_at, scope, uid
 ### wazuh_agent.WazuhAgent
@@ -323,17 +304,21 @@
 - **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: allowWhitelistBannedHosts, remoteACLs.UpdateCron, remoteACLs.blacklists.blacklist
 ### webproxy_cache.Cache
 - **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: enabled
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'memory_cache_mode' choices are rewritten by BLANK_VALUES (sent as empty value) before sending, and every translated value is valid
 ### webproxy_forward.General
 - **INFO** `FIELDS_NOT_SUPPORTED` 31 API field(s) not covered: acl.allowWhitelistBannedHosts, acl.allowedSubnets, acl.bannedHosts, acl.blackList, acl.browser, acl.googleapps, acl.mimeType, acl.remoteACLs.UpdateCron, acl.remoteACLs.blacklists.blacklist, acl.safePorts, acl.sslPorts, acl.unrestricted, acl.whiteList, acl.youtube, authentication.authEnforceGroup, authentication.children, authentication.credentialsttl, authentication.method, authentication.realm, icap.EnablePreview, icap.EncodeUsername, icap.OptionsTTL, icap.PreviewSize, icap.RequestURL, icap.ResponseURL, icap.SendClientIP, icap.SendUsername, icap.UsernameHeader, icap.enable, icap.exclude, workers
 ### webproxy_general.General
 - **INFO** `FIELDS_NOT_SUPPORTED` 25 API field(s) not covered: cache.local.cache_linux_packages, cache.local.cache_mem, cache.local.cache_windows_updates, cache.local.directory, cache.local.enabled, cache.local.max_swap_rate, cache.local.maximum_object_size, cache.local.maximum_object_size_in_memory, cache.local.memory_cache_mode, cache.local.size, cache.local.slot_size, cache.local.swap_timeout, parentproxy.enableauth, parentproxy.enabled, parentproxy.host, parentproxy.localdomains, parentproxy.localips, parentproxy.password, parentproxy.port, parentproxy.user, traffic.OverallBandwidthTrotteling, traffic.enabled, traffic.maxDownloadSize, traffic.maxUploadSize, traffic.perHostTrotteling
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'errors' choices are rewritten by BLANK_VALUES (sent as empty value) before sending, and every translated value is valid
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'handling_forwarded_for' choices are rewritten by BLANK_VALUES (sent as empty value) before sending, and every translated value is valid
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'log_target' choices are rewritten by BLANK_VALUES (sent as empty value) before sending, and every translated value is valid
 ### webproxy_pac_match.Match
-- **INFO** `CHOICE_NEW` option 'month_from': API also accepts ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP']
-- **INFO** `CHOICE_NEW` option 'month_to': API also accepts ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP']
-- **INFO** `CHOICE_NEW` option 'weekday_from': API also accepts ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED']
-- **INFO** `CHOICE_NEW` option 'weekday_to': API also accepts ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED']
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'month_from' choices are rewritten by MONTH_MAPPING before sending, and every translated value is valid
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'month_to' choices are rewritten by MONTH_MAPPING before sending, and every translated value is valid
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'weekday_from' choices are rewritten by WEEKDAY_MAPPING before sending, and every translated value is valid
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'weekday_to' choices are rewritten by WEEKDAY_MAPPING before sending, and every translated value is valid
 ### webproxy_pac_proxy.Proxy
-- **INFO** `CHOICE_NEW` option 'type': API also accepts ['DIRECT', 'HTTP', 'HTTPS', 'PROXY', 'SOCKS', 'SOCKS4', 'SOCKS5']
+- **INFO** `HANDLED_IN_CODE` CHOICE_INVALID: option 'type' choices are rewritten by .upper() before sending, and every translated value is valid
 ### webproxy_pac_rule.Rule
 - **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: enabled
 ### webproxy_remote_acl.Acl

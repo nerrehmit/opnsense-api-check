@@ -20,13 +20,13 @@ Inputs: the collection at `nerrehmit/collection_opnsense` HEAD (5cec92e, collect
 
 ### Problems that already existed on 26.1.11 (worth fixing while at it)
 
-These need a quick look at the module code, because the checker can't see value translations done by hand.
+These need a quick look at the module code before fixing.
 
 - `frr_diagnostic`: every target (`bgproute4`, `ospfroute`, ...) was renamed to `search*` in the FRR plugin, e.g. `searchBgproute4`.
 - `service`: `fetchmail`, `softether` and `legacy_subsystem` (ipsec_legacy) no longer exist. `ftp_proxy`/`udp_broadcast_relay` have no `reconfigure`, and `tinc` has no `status`.
 - `haproxy_fcgi`: `toggleFcgi` doesn't exist, but the class uses `enabled`.
 - `unbound_dot`: `add/set/del/toggleDot` are only served through a backwards-compatibility `__call()` that forwards to `*Forward`, so it's deprecated and will likely disappear.
-- Argument choices the API rejects: `nat_source.ip_protocol=inet46`; `openvpn_*.mode=dco`; `openvpn_server.user_cn_strict`; `haproxy_cpu.thread_id=x0`; several `webproxy_*` options (`default`/`squid`/`file`, numeric months/weekdays vs `JAN`/`MON`, lowercase vs uppercase PAC proxy types); `bind_blocklist.block` labels; `interface_lagg` yes/no vs 1/0.
+- Argument choices the API rejects: `nat_source.ip_protocol=inet46`; `openvpn_*.mode=dco` (the API calls it `ovpn`); `haproxy_cpu.thread_id=x0`; `interface_lagg` yes/no vs 1/0; `interface_vip.mode=other`.
 - `acme_validation`: field `dns_active24_token` no longer exists.
 - `alias_purge`: the module is deliberately retired (it calls `fail_json` pointing to the `*_multi` modules), but it imports `PURGE_MOD_ARGS` and `INFO_MOD_ARG`, which no longer exist. So users get a misleading "install httpx" error instead of the deprecation message.
 
@@ -51,10 +51,18 @@ These need a quick look at the module code, because the checker can't see value 
    - `FIELD_MISSING`: a field the module reads or writes that isn't in the model
    - `CHOICE_INVALID`: an argument choice that isn't in the field's `OptionValues`
    - `REQUIRED_NOT_SET`: a required API field without a default that the module never sends
+   - `HANDLED_IN_CODE` (a note, not an error or warning): one of the findings above that the collection's own code takes care of, with the reason (see below)
    - With `--baseline`: what changed between the two releases in the endpoints and models the collection uses, and whether each finding is new.
      A used field that switches between a plain field and a `ModelRelationField` (in either direction) is a WARN, because the module then sends the wrong kind of value (plain value vs. UUID of the linked entry). Other type, required and default changes stay INFO.
 
 Severity is lowered to WARN wherever the class overrides `search_call`, `get_existing`, `simplify_existing`, `build_request` and so on, because the static view may be wrong there. Those lines end in "verify".
+
+Some of that custom code is recognised, and its findings become `HANDLED_IN_CODE` notes instead:
+
+- Values the Ansible module rewrites before the class sees them: a module-level mapping applied as `MAP[...]` whose keys are the option's choices (`MONTH_MAPPING`, `BL_MAPPING`, `USER_CN_STRICT_MAP`), a mapping of option to the choice that gets blanked with `module.params[..] = ''` (`BLANK_VALUES`, valid when the API field isn't required), and `module.params['x'].upper()`/`.lower()`. The translated values are checked against the API, so a wrong mapping still shows up as `CHOICE_INVALID`.
+- Read-side `KEY_PATH` findings when the class lists its entries in its own `search_call()`/`get_existing()` without touching `API_KEY_PATH` (e.g. the IDS classes read `rows` from `search*`).
+- Write-side `KEY_PATH` findings when `build_request()` builds the payload under the key the API expects.
+- `FIELD_MISSING` for a field the class's own read method fills from other API fields (`simple['value'] = host['mx']`) and that `build_request()` handles, and for the entry key `FIELD_PK` (e.g. a privilege `id`).
 
 ## Rerun / keep up with releases
 
@@ -70,5 +78,5 @@ To follow new releases, run it for each new `26.7.x` tag with the previous tag a
 ## Limitations
 
 - It's static. Behaviour inside custom PHP actions is only checked heuristically (for a custom `get`, the keys must at least appear in its body). Dynamic option lists (interfaces, aliases, certificates) aren't compared.
-- Value translations the collection does in code, outside `FIELDS_VALUE_MAPPING`, can make a `CHOICE_INVALID` a false alarm. Check before fixing.
+- Value translations the collection does in code in some other way than the patterns above can still make a `CHOICE_INVALID` a false alarm. Check before fixing.
 - Plugins are compared at the same tag as core (`opnsense/plugins` uses matching tags). A box with an older plugin build may differ.
