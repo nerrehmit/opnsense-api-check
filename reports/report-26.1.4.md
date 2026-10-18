@@ -1,0 +1,342 @@
+# oxlorg.opnsense vs OPNsense 26.1.4
+
+156 module classes and 374 inline calls checked.
+**43 errors, 23 warnings, 127 notes.**
+
+## ERROR (43)
+
+### bind_blocklist.Blocklist
+- **ERROR** `CHOICE_INVALID` option 'block' allows ['AdAway List', 'AdGuard List', 'Blocklist.site Ads', 'Blocklist.site Fraud', 'Blocklist.site Phishing', 'Cameleon List', 'EMD Malicious Domains List', 'Easy List', 'Easyprivacy List', 'Malwaredomain List', 'NoCoin List', 'PornTop1M List', 'Ransomware Tracker List', 'Simple Ad List', 'Simple Tracker List', 'Steven Black List', 'WindowsSpyBlocker (extra)', 'WindowsSpyBlocker (spy)', 'WindowsSpyBlocker (update)', 'YoYo List', 'hpHosts Ads', 'hpHosts FSA', 'hpHosts PSH', 'hpHosts PUP'] which OPNsense\Bind\Dnsbl:<root>.type rejects (valid: ['aa', 'ag', 'bla', 'blf', 'blp', 'ca', 'el', 'emd', 'ep', 'hpa', 'hpf', 'hpp', 'hup', 'mw', 'nc', 'pt', 'rw', 'sa', 'sb', 'st', 'ws', 'wse', 'wsu', 'yy'])
+### haproxy_cpu.HaproxyCpu
+- **ERROR** `CHOICE_INVALID` option 'thread_id' allows ['x0'] which OPNsense\HAProxy\HAProxy:cpus.cpu.thread_id rejects (valid: ['all', 'even', 'odd', 'x1', 'x10', 'x11', 'x12', 'x13', 'x14', 'x15', 'x16', 'x17', 'x18', 'x19', 'x2', 'x20', 'x21', 'x22', 'x23', 'x24', 'x25', 'x26', 'x27', 'x28', 'x29', 'x3', 'x30', 'x31', 'x32', 'x33', 'x34', 'x35', 'x36', 'x37', 'x38', 'x39', 'x4', 'x40', 'x41', 'x42', 'x43', 'x44', 'x45', 'x46', 'x47', 'x48', 'x49', 'x5', 'x50', 'x51', 'x52', 'x53', 'x54', 'x55', 'x56', 'x57', 'x58', 'x59', 'x6', 'x60', 'x61', 'x62', 'x63', 'x7', 'x8', 'x9'])
+### haproxy_fcgi.HaproxyFcgi
+- **ERROR** `ENDPOINT_MISSING` CMDS['toggle']: /api/haproxy/settings/toggleFcgi: no action 'toggleFcgiAction' in SettingsController (controllers/OPNsense/HAProxy/Api/SettingsController.php)
+### nat_source.SNat
+- **ERROR** `CHOICE_INVALID` option 'ip_protocol' allows ['inet46'] which OPNsense\Firewall\Filter:snatrules.rule.ipprotocol rejects (valid: ['inet', 'inet6'])
+- **ERROR** `FIELD_MISSING` field 'static_port' -> 'staticnatport' not in OPNsense\Firewall\Filter:snatrules.rule: reading existing entries will fail or the value is silently ignored
+### openvpn_client.Client
+- **ERROR** `CHOICE_INVALID` option 'mode' allows ['dco'] which OPNsense\OpenVPN\OpenVPN:Instances.Instance.dev_type rejects (valid: ['ovpn', 'tap', 'tun'])
+### openvpn_server.Server
+- **ERROR** `CHOICE_INVALID` option 'mode' allows ['dco'] which OPNsense\OpenVPN\OpenVPN:Instances.Instance.dev_type rejects (valid: ['ovpn', 'tap', 'tun'])
+- **ERROR** `CHOICE_INVALID` option 'user_cn_strict' allows ['False', 'True', 'case-insensitive', 'ci', 'false', 'no', 'true', 'yes'] which OPNsense\OpenVPN\OpenVPN:Instances.Instance.strictusercn rejects (valid: ['0', '1', '2'])
+### plugins/modules/frr_diagnostic.py:57 (bgproute)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/bgproute: no action 'bgprouteAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (bgproute4)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/bgproute4: no action 'bgproute4Action' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (bgproute6)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/bgproute6: no action 'bgproute6Action' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (generalroute)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/generalroute: no action 'generalrouteAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (generalroute4)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/generalroute4: no action 'generalroute4Action' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (generalroute6)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/generalroute6: no action 'generalroute6Action' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (ospfneighbor)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/ospfneighbor: no action 'ospfneighborAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (ospfroute)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/ospfroute: no action 'ospfrouteAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (ospfv3database)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/ospfv3database: no action 'ospfv3databaseAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (ospfv3neighbor)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/ospfv3neighbor: no action 'ospfv3neighborAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### plugins/modules/frr_diagnostic.py:57 (ospfv3route)
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/quagga/diagnostics/ospfv3route: no action 'ospfv3routeAction' in DiagnosticsController (controllers/OPNsense/Quagga/Api/DiagnosticsController.php)
+### service fetchmail/reload
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/fetchmail/service/reconfigure: API module 'fetchmail' does not exist
+### service fetchmail/restart
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/fetchmail/service/restart: API module 'fetchmail' does not exist
+### service fetchmail/start
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/fetchmail/service/start: API module 'fetchmail' does not exist
+### service fetchmail/status
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/fetchmail/service/status: API module 'fetchmail' does not exist
+### service fetchmail/stop
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/fetchmail/service/stop: API module 'fetchmail' does not exist
+### service ftp_proxy/reload
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/ftpproxy/service/reconfigure: no action 'reconfigureAction' in ServiceController (controllers/OPNsense/FtpProxy/Api/ServiceController.php)
+### service iperf/reload
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/iperf/service/reconfigure: no action 'reconfigureAction' in ServiceController (controllers/OPNsense/iperf/Api/ServiceController.php)
+### service ipsec_legacy/reload
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/legacy_subsystem/service/applyConfig: API module 'legacy_subsystem' does not exist
+### service softether/reload
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/softether/service/reconfigure: API module 'softether' does not exist
+### service softether/restart
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/softether/service/restart: API module 'softether' does not exist
+### service softether/start
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/softether/service/start: API module 'softether' does not exist
+### service softether/status
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/softether/service/status: API module 'softether' does not exist
+### service softether/stop
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/softether/service/stop: API module 'softether' does not exist
+### service tinc/status
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/tinc/service/status: no action 'statusAction' in ServiceController (controllers/OPNsense/Tinc/Api/ServiceController.php)
+### service udp_broadcast_relay/reload
+- **ERROR** `ENDPOINT_MISSING` inline call: /api/udpbroadcastrelay/service/reconfigure: no action 'reconfigureAction' in ServiceController (controllers/OPNsense/UDPBroadcastRelay/Api/ServiceController.php)
+### webproxy_cache.Cache
+- **ERROR** `CHOICE_INVALID` option 'memory_cache_mode' allows ['default'] which OPNsense\Proxy\Proxy:general.cache.local.memory_cache_mode rejects (valid: ['always', 'disk', 'network'])
+### webproxy_general.General
+- **ERROR** `CHOICE_INVALID` option 'errors' allows ['squid'] which OPNsense\Proxy\Proxy:general.error_pages rejects (valid: ['custom', 'opnsense'])
+- **ERROR** `CHOICE_INVALID` option 'handling_forwarded_for' allows ['default'] which OPNsense\Proxy\Proxy:general.forwardedForHandling rejects (valid: ['delete', 'off', 'on', 'transparent', 'truncate'])
+- **ERROR** `CHOICE_INVALID` option 'log_target' allows ['file'] which OPNsense\Proxy\Proxy:general.logging.target rejects (valid: ['file_extendend', 'file_json', 'syslog', 'syslog_json'])
+### webproxy_pac_match.Match
+- **ERROR** `CHOICE_INVALID` option 'month_from' allows ['1', '10', '11', '12', '2', '3', '4', '5', '6', '7', '8', '9'] which OPNsense\Proxy\Proxy:pac.match.date_from rejects (valid: ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP'])
+- **ERROR** `CHOICE_INVALID` option 'month_to' allows ['1', '10', '11', '12', '2', '3', '4', '5', '6', '7', '8', '9'] which OPNsense\Proxy\Proxy:pac.match.date_to rejects (valid: ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP'])
+- **ERROR** `CHOICE_INVALID` option 'weekday_from' allows ['1', '2', '3', '4', '5', '6', '7'] which OPNsense\Proxy\Proxy:pac.match.weekday_from rejects (valid: ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED'])
+- **ERROR** `CHOICE_INVALID` option 'weekday_to' allows ['1', '2', '3', '4', '5', '6', '7'] which OPNsense\Proxy\Proxy:pac.match.weekday_to rejects (valid: ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED'])
+### webproxy_pac_proxy.Proxy
+- **ERROR** `CHOICE_INVALID` option 'type' allows ['direct', 'http', 'https', 'proxy', 'socks', 'socks4', 'socks5'] which OPNsense\Proxy\Proxy:pac.proxy.proxy_type rejects (valid: ['DIRECT', 'HTTP', 'HTTPS', 'PROXY', 'SOCKS', 'SOCKS4', 'SOCKS5'])
+
+## WARN (23)
+
+### ids_general.General
+- **WARN** `FIELD_MISSING` field 'profile' -> 'profile' not in OPNsense\IDS\IDS:general: reading existing entries will fail or the value is silently ignored (class has custom search_call(): verify)
+- **WARN** `FIELD_MISSING` field 'profile_toclient_groups' -> 'profile_toclient_groups' not in OPNsense\IDS\IDS:general: reading existing entries will fail or the value is silently ignored (class has custom search_call(): verify)
+- **WARN** `FIELD_MISSING` field 'profile_toserver_groups' -> 'profile_toserver_groups' not in OPNsense\IDS\IDS:general: reading existing entries will fail or the value is silently ignored (class has custom search_call(): verify)
+- **WARN** `KEY_PATH` 'set' (generic setAction) expects the payload under 'ids' but the module sends it under 'general' (class has custom build_request(): verify)
+### ids_policy.Policy
+- **WARN** `KEY_PATH` detail 'get_policy' returns {'policy': ...} (getBase) but API_KEY_PATH is 'policies.policy' (class has custom get_existing, search_call(): verify)
+- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:policies.policy does not exist in the model (class has custom get_existing, search_call(): verify)
+### ids_policy_rule.Rule
+- **WARN** `KEY_PATH` detail 'get_policy_rule' returns {'rule': ...} (getBase) but API_KEY_PATH is 'policies.rule' (class has custom search_call(): verify)
+- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:rules.rule does not exist in the model (class has custom search_call(): verify)
+### ids_ruleset.Ruleset
+- **WARN** `KEY_PATH` 'list_rulesets' is overridden in SettingsController and never references ['ruleset'] from API_KEY_PATH 'rulesets.ruleset' - the module will not find its entries in the response (class has custom search_call(): verify)
+- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:ruleset does not exist in the model (class has custom search_call(): verify)
+### ids_user_rule.Rule
+- **WARN** `KEY_PATH` detail 'get_user_rule' returns {'rule': ...} (getBase) but API_KEY_PATH is 'userDefinedRules.rule' (class has custom get_existing, search_call(): verify)
+- **WARN** `KEY_PATH` path OPNsense\IDS\IDS:userDefinedRules.rule does not exist in the model (class has custom get_existing, search_call(): verify)
+### interface_lagg.Lagg
+- **WARN** `CHOICE_INVALID` option 'lacp_strict' allows ['no', 'yes'] which OPNsense\Interfaces\Lagg:lagg.lacp_strict rejects (valid: ['', '0', '1']) (class has custom update(): verify)
+- **WARN** `CHOICE_INVALID` option 'use_flowid' allows ['no', 'yes'] which OPNsense\Interfaces\Lagg:lagg.use_flowid rejects (valid: ['', '0', '1']) (class has custom update(): verify)
+### interface_vip.Vip
+- **WARN** `CHOICE_INVALID` option 'mode' allows ['other'] which OPNsense\Interfaces\Vip:vip.mode rejects (valid: ['carp', 'ipalias', 'proxyarp']) (class has custom get_existing(): verify)
+### privilege.Privilege
+- **WARN** `FIELD_MISSING` field 'id' -> 'id' not in OPNsense\Auth\Priv:priv: reading existing entries will fail or the value is silently ignored (key path guessed)
+### route.Route
+- **WARN** `FIELD_MISSING` field 'enabled' -> 'enabled' not in OPNsense\Routes\Route:route: reading existing entries will fail or the value is silently ignored (class has custom simplify_existing(): verify)
+### unbound_dot.DnsOverTls
+- **WARN** `ENDPOINT_MAGIC` CMDS['add']: /api/unbound/settings/addDot: no such action, only reachable through the backwards-compatibility __call() in SettingsController (likely deprecated)
+- **WARN** `ENDPOINT_MAGIC` CMDS['del']: /api/unbound/settings/delDot: no such action, only reachable through the backwards-compatibility __call() in SettingsController (likely deprecated)
+- **WARN** `ENDPOINT_MAGIC` CMDS['set']: /api/unbound/settings/setDot: no such action, only reachable through the backwards-compatibility __call() in SettingsController (likely deprecated)
+- **WARN** `ENDPOINT_MAGIC` CMDS['toggle']: /api/unbound/settings/toggleDot: no such action, only reachable through the backwards-compatibility __call() in SettingsController (likely deprecated)
+### unbound_host.Host
+- **WARN** `FIELD_MISSING` field 'prio' -> 'prio' not in OPNsense\Unbound\Unbound:hosts.host: reading existing entries will fail or the value is silently ignored (class has custom simplify_existing(): verify)
+- **WARN** `FIELD_MISSING` field 'value' -> 'value' not in OPNsense\Unbound\Unbound:hosts.host: reading existing entries will fail or the value is silently ignored (class has custom simplify_existing(): verify)
+
+## Notes: coverage gaps and unverifiable spots (127)
+
+### acme_account.Account
+- **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: id, key, statusCode, statusLastUpdate
+### acme_action.Action
+- **INFO** `CHOICE_NEW` option 'type': API also accepts ['acme_proxmoxbs', 'acme_ruckus', 'acme_zyxel_gs1900', 'configd_reload_caddy']
+- **INFO** `FIELDS_NOT_SUPPORTED` 20 API field(s) not covered: acme_proxmoxbs_nodename, acme_proxmoxbs_port, acme_proxmoxbs_realm, acme_proxmoxbs_server, acme_proxmoxbs_tokenid, acme_proxmoxbs_tokenkey, acme_proxmoxbs_user, acme_ruckus_host, acme_ruckus_pass, acme_ruckus_user, acme_synology_dsm_otpcode, acme_zyxel_gs1900_host, acme_zyxel_gs1900_insecure, acme_zyxel_gs1900_password, acme_zyxel_gs1900_reboot, acme_zyxel_gs1900_user, configd, configd_generic_command, id, sftp_modtime
+### acme_certificate.Certificate
+- **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: certRefId, id, lastUpdate, profile, statusCode, statusLastUpdate
+### acme_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: UpdateCron, environment, haproxyAclRef, haproxyActionRef, haproxyBackendRef, haproxyServerRef
+### acme_validation.Validation
+- **INFO** `CHOICE_NEW` option 'dns_service': API also accepts ['dns_he_ddns', 'dns_mijnhost', 'dns_scaleway', 'dns_spaceship', 'dns_technitium', 'dns_timeweb', 'dns_websupport', 'dns_zoneedit']
+- **INFO** `FIELDS_NOT_SUPPORTED` 32 API field(s) not covered: dns_azuredns_managedidentity, dns_da_insecure, dns_da_key, dns_dh_key, dns_he_ddns_key, dns_inws_password, dns_lexicon_provider, dns_lexicon_token, dns_lexicon_user, dns_linode_key, dns_mijnhost_api_key, dns_scaleway_token, dns_sl_account_id, dns_sl_apiver, dns_sl_login_name, dns_sl_password, dns_sl_project_name, dns_sl_token_lifetime, dns_spaceship_api_key, dns_spaceship_api_secret, dns_spaceship_root_domain, dns_technitium_hostname, dns_technitium_token, dns_timeweb_token, dns_transip_token_global_key, dns_websupport_api_key, dns_websupport_api_secret, dns_zoneedit_id, dns_zoneedit_token, enabled, id, tlsalpn_service
+### alias.Alias
+- **INFO** `CHOICE_NEW` option 'type': API also accepts ['asn', 'authgroup']
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: categories, expire, proto
+### bind_blocklist.Blocklist
+- **INFO** `CHOICE_NEW` option 'block': API also accepts ['aa', 'ag', 'bla', 'blf', 'blp', 'ca', 'el', 'emd', 'ep', 'hpa', 'hpf', 'hpp', 'hup', 'mw', 'nc', 'pt', 'rw', 'sa', 'sb', 'st', 'ws', 'wse', 'wsu', 'yy']
+### bind_domain.Domain
+- **INFO** `CHOICE_NEW` option 'mode': API also accepts ['forward']
+- **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: allowrndctransfer, allowrndcupdate, forwardserver, serial
+### bind_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: general_log_level, rndcalgo, rndcsecret
+### bind_record.Record
+- **INFO** `CHOICE_NEW` option 'type': API also accepts ['DNAME', 'RP', 'SSHFP']
+### cron.CronJob
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: origin
+### dhcp_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: manual_config
+### dhcp_reservation_v4.ReservationV4
+- **INFO** `FIELDS_NOT_SUPPORTED` 10 API field(s) not covered: option_data.boot_file_name, option_data.classless_static_route, option_data.domain_name, option_data.domain_name_servers, option_data.domain_search, option_data.ntp_servers, option_data.routers, option_data.static_routes, option_data.tftp_server_name, option_data.time_servers
+### dhcp_subnet_v4.SubnetV4
+- **INFO** `FIELDS_NOT_SUPPORTED` 13 API field(s) not covered: match-client-id, option_data.boot_file_name, option_data.classless_static_route, option_data.domain_name, option_data.domain_name_servers, option_data.domain_search, option_data.ntp_servers, option_data.routers, option_data.static_routes, option_data.tftp_server_name, option_data.time_servers, option_data.v4_dnr, option_data.v6_only_preferred
+### dhcrelay_relay.DhcRelayRelay
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: carp_depend_on
+### dnsmasq_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 9 API field(s) not covered: dhcp.log_dhcp, dhcp.log_quiet, dhcp_boot, dhcp_options, dhcp_ranges, dhcp_tags, domainoverrides, hosts, strip_subnet
+### frr_bfd_neighbor.Neighbor
+- **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: detect_multiplier, multihop, receive_interval, transmit_interval
+### frr_bgp_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 9 API field(s) not covered: aspaths.aspath, bestpath, communitylists.communitylist, enforce_first_as, neighbors.neighbor, peergroups.peergroup, prefixlists.prefixlist, redistributions.redistribution, routemaps.routemap
+### frr_bgp_neighbor.Neighbor
+- **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: allowas_in, attributeunchanged, capabilities, peergroup, removeprivateas, soft_reconfiguration_inbound
+### frr_bgp_peer_group.PeerGroup
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: family
+### frr_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: fwrules
+### frr_ospf3_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 8 API field(s) not covered: interfaces.interface, networks.network, originate, originatealways, originatemetric, prefixlists.prefixlist, redistributions.redistribution, routemaps.routemap
+### frr_ospf3_interface.Interface
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: bfd
+### frr_ospf_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 8 API field(s) not covered: areas.area, interfaces.interface, logadjacencychanges, neighbors.neighbor, networks.network, prefixlists.prefixlist, redistributions.redistribution, routemaps.routemap
+### frr_ospf_interface.Interface
+- **INFO** `CHOICE_NEW` option 'auth_type': API also accepts ['plain']
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: bfd, p2mpoptions
+### gateway.Gw
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: monitor_killstates, monitor_killstates_priority
+### group.Group
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: gid, scope
+### haproxy_acl.HaproxyAcl
+- **INFO** `CHOICE_NEW` option 'expression': API also accepts ['http_method', 'quic_enabled', 'sc0_clr_gpc0', 'sc0_clr_gpc1', 'sc0_get_gpc0', 'sc0_get_gpc1', 'sc0_get_gpt0', 'sc0_gpc0_rate', 'sc0_gpc1_rate', 'sc0_inc_gpc0', 'sc0_inc_gpc1', 'sc1_clr_gpc', 'sc1_clr_gpc0', 'sc1_clr_gpc1', 'sc1_get_gpc0', 'sc1_get_gpc1', 'sc1_get_gpt0', 'sc1_gpc0_rate', 'sc1_gpc1_rate', 'sc1_inc_gpc0', 'sc1_inc_gpc1', 'sc2_clr_gpc', 'sc2_clr_gpc0', 'sc2_clr_gpc1', 'sc2_get_gpc0', 'sc2_get_gpc1', 'sc2_get_gpt0', 'sc2_gpc0_rate', 'sc2_gpc1_rate', 'sc2_inc_gpc0', 'sc2_inc_gpc1', 'sc_bytes_in_rate', 'sc_bytes_out_rate', 'sc_clr_gpc', 'sc_clr_gpc0', 'sc_clr_gpc1', 'sc_conn_cnt', 'sc_conn_cur', 'sc_conn_rate', 'sc_get_gpc', 'sc_get_gpc0', 'sc_get_gpc1', 'sc_get_gpt', 'sc_get_gpt0', 'sc_glitch_cnt', 'sc_glitch_rate', 'sc_gpc0_rate', 'sc_gpc1_rate', 'sc_gpc_rate', 'sc_http_err_cnt', 'sc_http_err_rate', 'sc_http_fail_cnt', 'sc_http_fail_rate', 'sc_http_req_cnt', 'sc_http_req_rate', 'sc_inc_gpc', 'sc_inc_gpc0', 'sc_inc_gpc1', 'sc_sess_cnt', 'sc_sess_rate', 'src_clr_gpc', 'src_clr_gpc0', 'src_clr_gpc1', 'src_get_gpc', 'src_get_gpc0', 'src_get_gpc1', 'src_get_gpt', 'src_glitch_cnt', 'src_glitch_rate', 'src_gpc0_rate', 'src_gpc1_rate', 'src_gpc_rate', 'src_http_fail_cnt', 'src_http_fail_rate', 'src_inc_gpc', 'src_inc_gpc0', 'src_inc_gpc1', 'stopping', 'var', 'wait_end']
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/haproxy/settings/toggleAcl: no action 'toggleAclAction' in SettingsController (controllers/OPNsense/HAProxy/Api/SettingsController.php)
+- **INFO** `FIELDS_NOT_SUPPORTED` 162 API field(s) not covered: converter, gpc_number, gpt_number, http_method, id, mapfile, queryBackend, sc0_clr_gpc0, sc0_clr_gpc0_comparison, sc0_clr_gpc1, sc0_clr_gpc1_comparison, sc0_get_gpc0, sc0_get_gpc0_comparison, sc0_get_gpc1, sc0_get_gpc1_comparison, sc0_get_gpt0, sc0_get_gpt0_comparison, sc0_gpc0_rate, sc0_gpc0_rate_comparison, sc0_gpc1_rate, sc0_gpc1_rate_comparison, sc0_inc_gpc0, sc0_inc_gpc0_comparison, sc0_inc_gpc1, sc0_inc_gpc1_comparison, sc1_clr_gpc, sc1_clr_gpc0, sc1_clr_gpc0_comparison, sc1_clr_gpc1, sc1_clr_gpc1_comparison, sc1_clr_gpc_comparison, sc1_get_gpc0, sc1_get_gpc0_comparison, sc1_get_gpc1, sc1_get_gpc1_comparison, sc1_get_gpt0, sc1_get_gpt0_comparison, sc1_gpc0_rate, sc1_gpc0_rate_comparison, sc1_gpc1_rate, sc1_gpc1_rate_comparison, sc1_inc_gpc0, sc1_inc_gpc0_comparison, sc1_inc_gpc1, sc1_inc_gpc1_comparison, sc2_clr_gpc, sc2_clr_gpc0, sc2_clr_gpc0_comparison, sc2_clr_gpc1, sc2_clr_gpc1_comparison, sc2_clr_gpc_comparison, sc2_get_gpc0, sc2_get_gpc0_comparison, sc2_get_gpc1, sc2_get_gpc1_comparison, sc2_get_gpt0, sc2_get_gpt0_comparison, sc2_gpc0_rate, sc2_gpc0_rate_comparison, sc2_gpc1_rate, sc2_gpc1_rate_comparison, sc2_inc_gpc0, sc2_inc_gpc0_comparison, sc2_inc_gpc1, sc2_inc_gpc1_comparison, sc_bytes_in_rate, sc_bytes_in_rate_comparison, sc_bytes_out_rate, sc_bytes_out_rate_comparison, sc_clr_gpc, sc_clr_gpc0, sc_clr_gpc0_comparison, sc_clr_gpc1, sc_clr_gpc1_comparison, sc_clr_gpc_comparison, sc_conn_cnt, sc_conn_cnt_comparison, sc_conn_cur, sc_conn_cur_comparison, sc_conn_rate, sc_conn_rate_comparison, sc_get_gpc, sc_get_gpc0, sc_get_gpc0_comparison, sc_get_gpc1, sc_get_gpc1_comparison, sc_get_gpc_comparison, sc_get_gpt, sc_get_gpt0, sc_get_gpt0_comparison, sc_get_gpt_comparison, sc_glitch_cnt, sc_glitch_cnt_comparison, sc_glitch_rate, sc_glitch_rate_comparison, sc_gpc0_rate, sc_gpc0_rate_comparison, sc_gpc1_rate, sc_gpc1_rate_comparison, sc_gpc_rate, sc_gpc_rate_comparison, sc_http_err_cnt, sc_http_err_cnt_comparison, sc_http_err_rate, sc_http_err_rate_comparison, sc_http_fail_cnt, sc_http_fail_cnt_comparison, sc_http_fail_rate, sc_http_fail_rate_comparison, sc_http_req_cnt, sc_http_req_cnt_comparison, sc_http_req_rate, sc_http_req_rate_comparison, sc_inc_gpc, sc_inc_gpc0, sc_inc_gpc0_comparison, sc_inc_gpc1, sc_inc_gpc1_comparison, sc_inc_gpc_comparison, sc_number, sc_sess_cnt, sc_sess_cnt_comparison, sc_sess_rate, sc_sess_rate_comparison, src_clr_gpc0, src_clr_gpc0_comparison, src_clr_gpc1, src_clr_gpc1_comparison, src_get_gpc, src_get_gpc0, src_get_gpc0_comparison, src_get_gpc1, src_get_gpc1_comparison, src_get_gpc_comparison, src_get_gpt, src_get_gpt_comparison, src_glitch_cnt, src_glitch_cnt_comparison, src_glitch_rate, src_glitch_rate_comparison, src_gpc0_rate, src_gpc0_rate_comparison, src_gpc1_rate, src_gpc1_rate_comparison, src_gpc_rate, src_gpc_rate_comparison, src_http_fail_cnt, src_http_fail_cnt_comparison, src_http_fail_rate, src_http_fail_rate_comparison, src_inc_gpc, src_inc_gpc0, src_inc_gpc0_comparison, src_inc_gpc1, src_inc_gpc1_comparison, src_inc_gpc_comparison, table_name, urlparam, value, var, var_comparison, var_value
+### haproxy_action.HaproxyAction
+- **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: custom, enabled, linkedAcls, testType
+- **INFO** `FIELD_MISSING_OPTIONAL` field 'test_type' -> 'test_type' not in OPNsense\HAProxy\HAProxy:actions.action (declared optional)
+- **INFO** `FIELD_MISSING_OPTIONAL` field 'linked_acls' -> 'linked_acls' not in OPNsense\HAProxy\HAProxy:actions.action (declared optional)
+- **INFO** `FIELD_MISSING_OPTIONAL` field 'custom_rule' -> 'custom_rule' not in OPNsense\HAProxy\HAProxy:actions.action (declared optional)
+### haproxy_backend.HaproxyBackend
+- **INFO** `CHOICE_NEW` option 'forwarded_header_parameters': API also accepts ['by_port', 'for_port']
+- **INFO** `FIELDS_NOT_SUPPORTED` 9 API field(s) not covered: healthCheckProxyProto, id, stickiness_dataTypes, stickiness_glitchRatePeriod, stickiness_gpcElements, stickiness_gpcRatePeriod, stickiness_gptElements, stickiness_httpFailRatePeriod, stickiness_length
+### haproxy_cpu.HaproxyCpu
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### haproxy_errorfile.HaproxyErrorfile
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/haproxy/settings/toggleErrorfile: no action 'toggleErrorfileAction' in SettingsController (controllers/OPNsense/HAProxy/Api/SettingsController.php)
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### haproxy_fcgi.HaproxyFcgi
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### haproxy_frontend.HaproxyFrontend
+- **INFO** `CHOICE_NEW` option 'ssl_max_version': API also accepts ['SSLv3']
+- **INFO** `CHOICE_NEW` option 'ssl_min_version': API also accepts ['SSLv3']
+- **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: id, stickiness_glitchRatePeriod, stickiness_gpcElements, stickiness_gpcRatePeriod, stickiness_gptElements, stickiness_httpFailRatePeriod
+- **INFO** `FIELD_MISSING_OPTIONAL` field 'forwarded_header' -> 'forwardedHeader' not in OPNsense\HAProxy\HAProxy:frontends.frontend (declared optional)
+### haproxy_general_settings.HaproxyGeneralSettings
+- **INFO** `FIELDS_NOT_SUPPORTED` 66 API field(s) not covered: cache.enabled, cache.maxAge, cache.maxObjectSize, cache.maxSecondaryEntries, cache.processVary, cache.totalMaxSize, defaults.customOptions, defaults.init_addr, defaults.maxConnections, defaults.maxConnectionsServers, defaults.redispatch, defaults.retries, defaults.timeoutCheck, defaults.timeoutClient, defaults.timeoutConnect, defaults.timeoutServer, logging.facility, logging.host, logging.length, logging.level, peers.enabled, peers.listen1, peers.listen2, peers.name1, peers.name2, peers.port1, peers.port2, stats.allowedGroups, stats.allowedUsers, stats.authEnabled, stats.customOptions, stats.enabled, stats.port, stats.prometheus_bind, stats.prometheus_enabled, stats.prometheus_path, stats.remoteBind, stats.remoteEnabled, stats.users, storeOcsp, tuning.bogusProxyEnabled, tuning.bufferSize, tuning.customOptions, tuning.h2_initialWindowSize, tuning.h2_initialWindowSizeIncoming, tuning.h2_initialWindowSizeOutgoing, tuning.h2_maxConcurrentStreams, tuning.h2_maxConcurrentStreamsIncoming, tuning.h2_maxConcurrentStreamsOutgoing, tuning.luaMaxMem, tuning.maxConnections, tuning.maxDHSize, tuning.nbthread, tuning.ocspUpdateEnabled, tuning.ocspUpdateMaxDelay, tuning.ocspUpdateMinDelay, tuning.resolversPrefer, tuning.root, tuning.spreadChecks, tuning.sslServerVerify, tuning.ssl_bindOptions, tuning.ssl_cipherList, tuning.ssl_cipherSuites, tuning.ssl_defaultsEnabled, tuning.ssl_maxVersion, tuning.ssl_minVersion
+### haproxy_group.HaproxyGroup
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### haproxy_healthcheck.HaproxyHealthcheck
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/haproxy/settings/toggleHealthcheck: no action 'toggleHealthcheckAction' in SettingsController (controllers/OPNsense/HAProxy/Api/SettingsController.php)
+- **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: agentPort, dbUser, force_ssl, smtpDomain
+### haproxy_lua.HaproxyLua
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### haproxy_mailer.HaproxyMailer
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### haproxy_maintenance.HaproxyMaintenance
+- **INFO** `FIELDS_NOT_SUPPORTED` 5 API field(s) not covered: reloadServiceCron, restartServiceCron, syncCertsCron, updateOcsp, updateOcspCron
+### haproxy_mapfile.HaproxyMapfile
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/haproxy/settings/toggleMapfile: no action 'toggleMapfileAction' in SettingsController (controllers/OPNsense/HAProxy/Api/SettingsController.php)
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: id, type, url
+### haproxy_resolver.HaproxyResolver
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### haproxy_server.HaproxyServer
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: id, sslSNIExpr
+### haproxy_user.HaproxyUser
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: id
+### hasync_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: pfsyncdefer
+### ids_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 10 API field(s) not covered: detect.Profile, detect.toclient_groups, detect.toserver_groups, eveLog.http.dumpAllHeaders, eveLog.http.enable, eveLog.http.extended, eveLog.tls.custom, eveLog.tls.enable, eveLog.tls.extended, eveLog.tls.sessionResumption
+### interface_bridge.Bridge
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/interfaces/bridge_settings/toggleItem: no action 'toggleItemAction' in BridgeSettingsController (controllers/OPNsense/Interfaces/Api/BridgeSettingsController.php)
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: bridgeif
+### interface_gif.Gif
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/interfaces/gif_settings/toggleItem: no action 'toggleItemAction' in GifSettingsController (controllers/OPNsense/Interfaces/Api/GifSettingsController.php)
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: gifif, if, ipaddr
+### interface_gre.Gre
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/interfaces/gre_settings/toggleItem: no action 'toggleItemAction' in GreSettingsController (controllers/OPNsense/Interfaces/Api/GreSettingsController.php)
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: greif, if, ipaddr
+### interface_lagg.Lagg
+- **INFO** `CHOICE_NEW` option 'lacp_strict': API also accepts ['0', '1']
+- **INFO** `CHOICE_NEW` option 'use_flowid': API also accepts ['0', '1']
+### interface_loopback.Loopback
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: deviceId
+### interface_vip.Vip
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: nosync, subnet, subnet_bits
+### interface_vlan.Vlan
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: proto
+### interface_vxlan.Vxlan
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: deviceId
+### ipsec_auth.BaseAuth
+- **INFO** `UNUSED` no Ansible module uses this class; skipped
+### ipsec_cert.KeyPair
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: keyFingerprint, keySize
+### ipsec_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 7 API field(s) not covered: charon.plugins.attr.x_28679, charon.reqid_base, charon.syslog.daemon.chd, charon.syslog.daemon.lib, general.enabled, keyPairs.keyPair, preSharedKeys.preSharedKey
+### ipsec_manual_spd.ManualSPD
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: protocol
+### monit_service.Service
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: starttimeout
+### nat_destination.DNat
+- **INFO** `FIELDS_NOT_SUPPORTED` 9 API field(s) not covered: associated-rule-id, category, created.description, created.time, created.username, nosync, updated.description, updated.time, updated.username
+### nat_one_to_one.OneToOne
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: categories
+### nat_source.SNat
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: categories, tagged
+### neighbor.Neighbor
+- **INFO** `ENDPOINT_MISSING` CMDS['toggle']: /api/interfaces/neighbor_settings/toggleItem: no action 'toggleItemAction' in NeighborSettingsController (controllers/OPNsense/Interfaces/Api/NeighborSettingsController.php)
+### openvpn_client.Client
+- **INFO** `CHOICE_NEW` option 'mode': API also accepts ['ovpn']
+- **INFO** `CHOICE_NEW` option 'options': API also accepts ['block-ipv6', 'explicit-exit-notify', 'fast-io']
+- **INFO** `FIELDS_NOT_SUPPORTED` 35 API field(s) not covered: auth-gen-token, auth-gen-token-renewal, auth-gen-token-secret, authmode, bridge_gateway, bridge_pool, cert_depth, compress_migrate, crl, data-ciphers, data-ciphers-fallback, dns_domain, dns_domain_search, dns_servers, ifconfig-pool-persist, local_group, maxclients, nopool, ntp_servers, port-share, provision_exclusive, push_excluded_routes, push_inactive, redirect_gateway, register_dns, route_metric, server, server_ipv6, strictusercn, topology, use_ocsp, username_as_common_name, various_push_flags, verify-x509-name, verify_client_cert
+### openvpn_server.Server
+- **INFO** `CHOICE_NEW` option 'data_cipher_fallback': API also accepts ['AES-128-CBC', 'AES-128-CFB', 'AES-128-CFB1', 'AES-128-CFB8', 'AES-128-OFB', 'AES-192-CBC', 'AES-192-CFB', 'AES-192-CFB1', 'AES-192-CFB8', 'AES-192-GCM', 'AES-192-OFB', 'AES-256-CBC', 'AES-256-CFB', 'AES-256-CFB1', 'AES-256-CFB8', 'AES-256-OFB']
+- **INFO** `CHOICE_NEW` option 'data_ciphers': API also accepts ['AES-128-CBC', 'AES-128-CFB', 'AES-128-CFB1', 'AES-128-CFB8', 'AES-128-OFB', 'AES-192-CBC', 'AES-192-CFB', 'AES-192-CFB1', 'AES-192-CFB8', 'AES-192-GCM', 'AES-192-OFB', 'AES-256-CBC', 'AES-256-CFB', 'AES-256-CFB1', 'AES-256-CFB8', 'AES-256-OFB']
+- **INFO** `CHOICE_NEW` option 'mode': API also accepts ['ovpn']
+- **INFO** `CHOICE_NEW` option 'options': API also accepts ['block-ipv6', 'explicit-exit-notify', 'fast-io']
+- **INFO** `CHOICE_NEW` option 'push_options': API also accepts ['block-ipv6', 'explicit-exit-notify']
+- **INFO** `CHOICE_NEW` option 'user_cn_strict': API also accepts ['0', '1', '2']
+- **INFO** `FIELDS_NOT_SUPPORTED` 11 API field(s) not covered: bridge_gateway, bridge_pool, carp_depend_on, compress_migrate, http-proxy, password, push_excluded_routes, push_inactive, remote, username, verify-x509-name
+### package.Package
+- **INFO** `UNUSED` no Ansible module uses this class; skipped
+### postfix_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: tlswrappermode
+### privilege.Privilege
+- **INFO** `UNVERIFIED` detail action 'get_item' is custom (no getBase); key path not verified
+### route.Route
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: disabled
+### rule.Rule
+- **INFO** `CHOICE_NEW` option 'icmp_type': API also accepts ['althost', 'dataconv', 'inforep', 'inforeq', 'ipv6-here', 'ipv6-where', 'maskrep', 'maskreq', 'mobredir', 'mobregrep', 'mobregreq', 'skip', 'squench', 'trace']
+- **INFO** `FIELDS_NOT_SUPPORTED` 8 API field(s) not covered: categories, icmp6type, nopfsync, nosync, tcpflags_any, udp-first, udp-multiple, udp-single
+### shaper_pipe.Pipe
+- **INFO** `CHOICE_NEW` option 'mask': API also accepts ['dst-ip6', 'src-ip6']
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: number, origin
+### shaper_queue.Queue
+- **INFO** `CHOICE_NEW` option 'mask': API also accepts ['dst-ip6', 'src-ip6']
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: number, origin
+### shaper_rule.Rule
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: origin
+### unbound_domain.Domain
+- **INFO** `UNUSED` no Ansible module uses this class; skipped
+### unbound_dot.DnsOverTls
+- **INFO** `CHOICE_NEW` option 'type': API also accepts ['forward']
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: description, forward_first, forward_tcp_upstream
+### unbound_forward.Forward
+- **INFO** `CHOICE_NEW` option 'type': API also accepts ['dot']
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: forward_first, verify
+### unbound_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 2 API field(s) not covered: safesearch, stats
+### unbound_host.Host
+- **INFO** `CHOICE_NEW` option 'record_type': API also accepts ['TXT']
+- **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: addptr, mx, mxprio, server, ttl, txtdata
+### user.User
+- **INFO** `FIELDS_NOT_SUPPORTED` 6 API field(s) not covered: apikeys, dashboard, otp_seed, pwd_changed_at, scope, uid
+### wazuh_agent.WazuhAgent
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: active_response.repeated_offenders
+### webproxy_acl.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 3 API field(s) not covered: allowWhitelistBannedHosts, remoteACLs.UpdateCron, remoteACLs.blacklists.blacklist
+### webproxy_cache.Cache
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: enabled
+### webproxy_forward.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 31 API field(s) not covered: acl.allowWhitelistBannedHosts, acl.allowedSubnets, acl.bannedHosts, acl.blackList, acl.browser, acl.googleapps, acl.mimeType, acl.remoteACLs.UpdateCron, acl.remoteACLs.blacklists.blacklist, acl.safePorts, acl.sslPorts, acl.unrestricted, acl.whiteList, acl.youtube, authentication.authEnforceGroup, authentication.children, authentication.credentialsttl, authentication.method, authentication.realm, icap.EnablePreview, icap.EncodeUsername, icap.OptionsTTL, icap.PreviewSize, icap.RequestURL, icap.ResponseURL, icap.SendClientIP, icap.SendUsername, icap.UsernameHeader, icap.enable, icap.exclude, workers
+### webproxy_general.General
+- **INFO** `FIELDS_NOT_SUPPORTED` 25 API field(s) not covered: cache.local.cache_linux_packages, cache.local.cache_mem, cache.local.cache_windows_updates, cache.local.directory, cache.local.enabled, cache.local.max_swap_rate, cache.local.maximum_object_size, cache.local.maximum_object_size_in_memory, cache.local.memory_cache_mode, cache.local.size, cache.local.slot_size, cache.local.swap_timeout, parentproxy.enableauth, parentproxy.enabled, parentproxy.host, parentproxy.localdomains, parentproxy.localips, parentproxy.password, parentproxy.port, parentproxy.user, traffic.OverallBandwidthTrotteling, traffic.enabled, traffic.maxDownloadSize, traffic.maxUploadSize, traffic.perHostTrotteling
+### webproxy_pac_match.Match
+- **INFO** `CHOICE_NEW` option 'month_from': API also accepts ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP']
+- **INFO** `CHOICE_NEW` option 'month_to': API also accepts ['APR', 'AUG', 'DEC', 'FEB', 'JAN', 'JUL', 'JUN', 'MAR', 'MAY', 'NOV', 'OCT', 'SEP']
+- **INFO** `CHOICE_NEW` option 'weekday_from': API also accepts ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED']
+- **INFO** `CHOICE_NEW` option 'weekday_to': API also accepts ['FRI', 'MON', 'SAT', 'SUN', 'THU', 'TUE', 'WED']
+### webproxy_pac_proxy.Proxy
+- **INFO** `CHOICE_NEW` option 'type': API also accepts ['DIRECT', 'HTTP', 'HTTPS', 'PROXY', 'SOCKS', 'SOCKS4', 'SOCKS5']
+### webproxy_pac_rule.Rule
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: enabled
+### webproxy_remote_acl.Acl
+- **INFO** `FIELDS_NOT_SUPPORTED` 1 API field(s) not covered: enabled
+### wireguard_server.Server
+- **INFO** `FIELDS_NOT_SUPPORTED` 4 API field(s) not covered: debug, endpoint, instance, peer_dns
