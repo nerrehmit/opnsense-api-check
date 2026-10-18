@@ -106,6 +106,11 @@ def api_names(field: str, translate: dict):
     return [(t,)]
 
 
+def is_relation(field_type) -> bool:
+    """ModelRelationField and its subclasses (e.g. GroupedModelRelationField) store UUIDs of other entries"""
+    return isinstance(field_type, str) and field_type.endswith('ModelRelationField')
+
+
 class Checker:
     def __init__(self, coll: dict, api: Api, baseline: Api = None):
         self.coll = coll
@@ -354,9 +359,16 @@ class Checker:
                          + (f' +{added}' if added else '') + (f' -{removed}' if removed else ''))
             for attr in ('type', 'required', 'default'):
                 if o.get(attr) != n.get(attr) and p in used:
-                    self.add('INFO', where, 'RELEASE_DIFF',
+                    sev, note = 'INFO', ''
+                    if attr == 'type' and is_relation(o.get(attr)) != is_relation(n.get(attr)):
+                        # the field changed between holding a plain value and holding UUIDs of linked entries
+                        sev = 'WARN'
+                        note = (' (now expects UUIDs of linked entries: plain values sent by the module are rejected)'
+                                if is_relation(n.get(attr)) else
+                                ' (no longer a link: the module must send the plain value instead of a UUID)')
+                    self.add(sev, where, 'RELEASE_DIFF',
                              f"{self.base.label} -> {self.api.label}: '{'.'.join(p)}' {attr} "
-                             f"{o.get(attr)!r} -> {n.get(attr)!r}")
+                             f"{o.get(attr)!r} -> {n.get(attr)!r}{note}")
 
     def diff_endpoints(self):
         """Actions of used controllers that changed between baseline and snapshot."""
