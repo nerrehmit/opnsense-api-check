@@ -1,7 +1,7 @@
 # oxlorg.opnsense vs OPNsense 26.7.7
 
 156 module classes and 374 inline calls checked, release diff against 26.1.11.
-**61 errors, 53 warnings, 208 notes.**
+**61 errors, 56 warnings, 205 notes.**
 
 ## New since 26.1.11: errors and warnings (24)
 
@@ -72,12 +72,17 @@
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: action 'set' now implemented in OPNsense\Firewall\Api\SourceNatController (was OPNsense\Base\ApiMutableModelControllerBase)
 ### frr_bgp_neighbor.Neighbor
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: field 'multiprotocol' removed (module uses it)
+### frr_ospf3_interface.Interface
+- **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'area' type 'TextField' -> 'ModelRelationField' (now expects UUIDs of linked entries: plain values sent by the module are rejected)
 ### frr_ospf_general.General
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: field 'passiveinterfaces' removed (module uses it)
+### frr_ospf_interface.Interface
+- **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'area' type 'TextField' -> 'ModelRelationField' (now expects UUIDs of linked entries: plain values sent by the module are rejected)
 ### frr_ospf_network.Network
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: field 'arearange' removed (module uses it)
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: field 'linkedPrefixlistIn' removed (module uses it)
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: field 'linkedPrefixlistOut' removed (module uses it)
+- **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'area' type 'TextField' -> 'ModelRelationField' (now expects UUIDs of linked entries: plain values sent by the module are rejected)
 ### quagga/ospf6settings
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: action 'addNetwork' removed
 - **WARN** `RELEASE_DIFF` 26.1.11 -> 26.7.7: action 'delNetwork' removed
@@ -128,7 +133,6 @@
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: field 'networks.network' removed
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'routerid' type 'TextField' -> 'NetworkField'
 ### frr_ospf3_interface.Interface
-- **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'area' type 'TextField' -> 'ModelRelationField'
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'interfacename' required None -> True
 ### frr_ospf3_redistribution.Redistribution
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'linkedRoutemap' type 'ModelRelationField' -> '.\\GroupedModelRelationField'
@@ -138,10 +142,8 @@
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'routerid' type 'TextField' -> 'NetworkField'
 ### frr_ospf_interface.Interface
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: field 'passive' added
-- **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'area' type 'TextField' -> 'ModelRelationField'
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'interfacename' required None -> True
 ### frr_ospf_network.Network
-- **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'area' type 'TextField' -> 'ModelRelationField'
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'ipaddr' type 'TextField' -> 'NetworkField'
 ### frr_ospf_redistribution.Redistribution
 - **INFO** `RELEASE_DIFF` 26.1.11 -> 26.7.7: 'linkedRoutemap' type 'ModelRelationField' -> '.\\GroupedModelRelationField'

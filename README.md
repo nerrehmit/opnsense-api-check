@@ -52,6 +52,7 @@ These need a quick look at the module code, because the checker can't see value 
    - `CHOICE_INVALID`: an argument choice that isn't in the field's `OptionValues`
    - `REQUIRED_NOT_SET`: a required API field without a default that the module never sends
    - With `--baseline`: what changed between the two releases in the endpoints and models the collection uses, and whether each finding is new.
+     A used field that switches between a plain field and a `ModelRelationField` (in either direction) is a WARN, because the module then sends the wrong kind of value (plain value vs. UUID of the linked entry). Other type, required and default changes stay INFO.
 
 Severity is lowered to WARN wherever the class overrides `search_call`, `get_existing`, `simplify_existing`, `build_request` and so on, because the static view may be wrong there. Those lines end in "verify".
 
