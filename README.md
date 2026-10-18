@@ -28,7 +28,7 @@ These need a quick look at the module code, because the checker can't see value 
 - `unbound_dot`: `add/set/del/toggleDot` are only served through a backwards-compatibility `__call()` that forwards to `*Forward`, so it's deprecated and will likely disappear.
 - Argument choices the API rejects: `nat_source.ip_protocol=inet46`; `openvpn_*.mode=dco`; `openvpn_server.user_cn_strict`; `haproxy_cpu.thread_id=x0`; several `webproxy_*` options (`default`/`squid`/`file`, numeric months/weekdays vs `JAN`/`MON`, lowercase vs uppercase PAC proxy types); `bind_blocklist.block` labels; `interface_lagg` yes/no vs 1/0.
 - `acme_validation`: field `dns_active24_token` no longer exists.
-- `alias_purge`: it imports `PURGE_MOD_ARGS` and `INFO_MOD_ARG`, which no longer exist in `defaults/main.py`. The module can't load, and it misreports the failure as "install httpx".
+- `alias_purge`: the module is deliberately retired (it calls `fail_json` pointing to the `*_multi` modules), but it imports `PURGE_MOD_ARGS` and `INFO_MOD_ARG`, which no longer exist. So users get a misleading "install httpx" error instead of the deprecation message.
 
 ### Coverage gaps (not breakages)
 
