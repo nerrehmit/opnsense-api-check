@@ -144,6 +144,9 @@ def expand_dynamic(calls: list, modules: dict) -> list:
 
 def savepoint_calls(collection: str, modules: dict) -> list:
     p = os.path.join(collection, 'plugins', 'module_utils', 'main', 'savepoint.py')
+    if not os.path.isfile(p):
+        # removed from the collection once OPNsense 26.7 dropped the savepoint API
+        return []
     with open(p, encoding='utf-8') as fh:
         cmds = sorted(set(re.findall(r"'command':\s*'(\w+)'", fh.read())))
     opts = modules.get('savepoint', {}).get('options', {})
