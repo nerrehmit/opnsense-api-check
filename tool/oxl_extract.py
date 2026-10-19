@@ -168,7 +168,7 @@ def service_calls() -> list:
             cmd = svc.get('m', {}).get(action, mod.ACTION_MAPPING.get(action, action))
             calls.append({
                 'file': 'plugins/modules/service.py', 'line': 0, 'origin': f'service {name}/{action}',
-                'module': svc.get('c', name), 'controller': mod.API_CONTROLLER, 'command': cmd,
+                'module': svc.get('c', name), 'controller': svc.get('ct', mod.API_CONTROLLER), 'command': cmd,
             })
     return calls
 
