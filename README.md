@@ -52,6 +52,7 @@ These need a quick look at the module code before fixing.
    - `CHOICE_INVALID`: an argument choice that isn't in the field's `OptionValues`
    - `REQUIRED_NOT_SET`: a required API field without a default that the module never sends
    - `HANDLED_IN_CODE` (a note, not an error or warning): one of the findings above that the collection's own code takes care of, with the reason (see below)
+   - `EXTRACT_ERROR`: a part of the collection that `oxl_extract.py` couldn't read, so it wasn't checked. It is an ERROR when a class file or a whole call table (the `service` mapping, the savepoint calls) is missing, and a WARN when only one Ansible module couldn't be loaded (currently the retired `alias_purge`). These are listed first in the report, so a run can't pass while part of the collection was skipped.
    - With `--baseline`: what changed between the two releases in the endpoints and models the collection uses, and whether each finding is new.
      A used field that switches between a plain field and a `ModelRelationField` (in either direction) is a WARN, because the module then sends the wrong kind of value (plain value vs. UUID of the linked entry). Other type, required and default changes stay INFO.
 
