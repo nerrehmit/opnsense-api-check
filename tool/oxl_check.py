@@ -371,6 +371,25 @@ class Checker:
                     self.add('INFO', where, 'CHOICE_NEW',
                              f"option '{opt}': API also accepts {new}", field=opt)
 
+        # ---- receive-side value mapping vs option labels
+        # FIELDS_VALUE_MAPPING_RCV maps what the API returns back to the module's choices. For an option list
+        # with keys 0..n PHP's json_encode() returns a JSON list instead of a dict, and the collection then reads
+        # the display label of the selected entry ('select_opt_list' typing), so these values must be labels.
+        for f, fmap in sorted((c.get('FIELDS_VALUE_MAPPING_RCV') or {}).items()):
+            alts = api_names(f, translate)
+            fld = next((fields[a] for a in alts if a in fields), None)
+            if not fld or not isinstance(fmap, dict) or 'labels' not in fld:
+                continue
+            labels = fld['labels']
+            unknown = {ch: str(v) for ch, v in fmap.items()
+                       if str(v) not in labels and str(v) not in labels.values() and str(v) != ''}
+            if unknown:
+                self.add(sev, where, 'LABEL_MISMATCH',
+                         f"FIELDS_VALUE_MAPPING_RCV['{f}'] expects {sorted(unknown.values())} for {sorted(unknown)} "
+                         f"but {node_desc}.{'.'.join(alts[0])} has neither such a key nor such a label "
+                         f"(labels: {sorted(labels.values())}): existing entries are not mapped back, so the module "
+                         f"reports a change on every run{note}", field=f)
+
     # ------------------------------------------------------------------ release diff
     def diff_node(self, where, c, get_ctrl, node_desc):
         if not get_ctrl or ':' not in (node_desc or ''):
@@ -388,6 +407,10 @@ class Checker:
         of, nf = leaf_fields(old_n), leaf_fields(new_n)
         translate = c.get('FIELDS_TRANSLATE') or {}
         used = {a for f in (c.get('FIELDS_ALL') or []) for a in api_names(f, translate)}
+        # API paths whose values the class maps back from what the API returns (possibly display labels)
+        rcv = {a: {str(v) for v in fmap.values()}
+               for f, fmap in (c.get('FIELDS_VALUE_MAPPING_RCV') or {}).items() if isinstance(fmap, dict)
+               for a in api_names(f, translate)}
         for p in sorted(set(nf) - set(of)):
             self.add('INFO', where, 'RELEASE_DIFF',
                      f"{self.base.label} -> {self.api.label}: field '{'.'.join(p)}' added"
@@ -404,6 +427,15 @@ class Checker:
                 self.add('WARN' if removed and p in used else 'INFO', where, 'RELEASE_DIFF',
                          f"{self.base.label} -> {self.api.label}: options of '{'.'.join(p)}'"
                          + (f' +{added}' if added else '') + (f' -{removed}' if removed else ''))
+            ol, nl = o.get('labels') or {}, n.get('labels') or {}
+            relabeled = sorted(k for k in set(ol) & set(nl) if ol[k] != nl[k])
+            if relabeled and p in used:
+                by_label = [k for k in relabeled if ol[k] in rcv.get(p, ())]
+                self.add('WARN' if by_label else 'INFO', where, 'RELEASE_DIFF',
+                         f"{self.base.label} -> {self.api.label}: labels of '{'.'.join(p)}' changed: "
+                         + ', '.join(f"{k}: {ol[k]!r} -> {nl[k]!r}" for k in relabeled)
+                         + (' (FIELDS_VALUE_MAPPING_RCV maps the old label: existing entries are no longer '
+                            'recognised)' if by_label else ''))
             for attr in ('type', 'required', 'default'):
                 if o.get(attr) != n.get(attr) and p in used:
                     sev, note = 'INFO', ''
