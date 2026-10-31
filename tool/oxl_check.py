@@ -423,6 +423,9 @@ class Checker:
             return
         used = set()
         for c in self.coll['classes'].values():
+            if not c.get('API_CONT'):
+                # abstract base class (e.g. trust.BaseTrust sets only API_MOD, its subclasses set API_CONT)
+                continue
             for m, ct in ((c['API_MOD'], c['API_CONT']), (c.get('API_MOD_GET', c['API_MOD']),
                                                             c.get('API_CONT_GET', c['API_CONT']))):
                 used.add((m, ct))
@@ -454,7 +457,23 @@ class Checker:
                 cmd = None
             self.endpoint(where, call['module'], call['controller'], cmd, 'inline call')
 
+    # ------------------------------------------------------------------ extractor errors
+    def check_extract_errors(self):
+        """Whatever oxl_extract.py couldn't read was not checked: report it instead of passing silently"""
+        for err in self.coll.get('errors', []):
+            source, _, detail = err.partition(': ')
+            if source.startswith('modules/'):
+                # one Ansible module: its options and calls are missing, the classes are still checked
+                what = "its argument spec couldn't be read" if detail.startswith('argspec ') \
+                    else "the module couldn't be loaded"
+                self.add('WARN', 'extract', 'EXTRACT_ERROR', f"{source}: not checked, {what} ({detail})")
+            else:
+                # a class file or a whole call table (savepoint, service): a large part of the check is missing
+                self.add('ERROR', 'extract', 'EXTRACT_ERROR',
+                         f"{source}: not checked, the extractor failed ({detail})")
+
     def run(self):
+        self.check_extract_errors()
         for key, c in sorted(self.coll['classes'].items()):
             self.check_class(key, c)
         self.check_inline()
@@ -475,7 +494,9 @@ def to_markdown(findings, coll, api, base) -> str:
         f"**{counts['ERROR']} errors, {counts['WARN']} warnings, {counts['INFO']} notes.**",
         '',
     ]
-    groups = []
+    groups = [('Not checked: the extractor could not read these',
+               [f for f in findings if f['code'] == 'EXTRACT_ERROR'])]
+    findings = [f for f in findings if f['code'] != 'EXTRACT_ERROR']
     if base:
         groups.append((f'New since {base.label}: errors and warnings',
                        [f for f in findings if f.get('new') and f['severity'] != 'INFO']))

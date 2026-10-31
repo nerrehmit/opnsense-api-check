@@ -339,11 +339,15 @@ def extract(collection: str) -> dict:
         modules[f[:-3]] = {'classes': sorted(set(used)), 'options': opts}
 
     calls = expand_dynamic(inline_calls(collection), modules)
-    try:
-        calls.extend(savepoint_calls(collection, modules))
-        calls.extend(service_calls())
-    except Exception as e:  # pylint: disable=W0718
-        errors.append(f'service mapping: {e!r}')
+    # separately, so a problem with one table doesn't silently drop the other
+    for label, collect in (
+            ('savepoint calls', lambda: savepoint_calls(collection, modules)),
+            ('service mapping', service_calls),
+    ):
+        try:
+            calls.extend(collect())
+        except Exception as e:  # pylint: disable=W0718
+            errors.append(f'{label}: {e!r}')
 
     return {'classes': classes, 'modules': modules, 'inline_calls': calls, 'errors': errors}
 
