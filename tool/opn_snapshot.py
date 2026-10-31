@@ -242,14 +242,16 @@ def parse_model_node(el) -> dict:
         node['multiple'] = True
     ov = el.find('OptionValues')
     if ov is not None:
-        opts = []
+        # mirrors BaseModel::parseOptionData() + OptionField::setOptionValues(): an element with children is an
+        # option group whatever its attributes (its 'value' attribute is only the group label, e.g. the Unbound
+        # blocklist providers), a 'value' attribute replaces the tag as option key, an empty label shows the key
+        labels = {}
         for o in ov:
-            if o.get('value') is None and len(o):
-                # <optgroup><value>..</value></optgroup>
-                opts.extend(g.get('value') if g.get('value') is not None else g.tag for g in o)
-            else:
-                opts.append(o.get('value') if o.get('value') is not None else o.tag)
-        node['options'] = opts
+            for g in (o if len(o) else [o]):
+                key = g.get('value') if g.get('value') is not None else g.tag
+                labels[key] = (g.text or '').strip() or key
+        node['options'] = list(labels)
+        node['labels'] = labels
     return node
 
 

@@ -39,11 +39,22 @@ These need a quick look at the module code before fixing.
 - **#446** is reported as a *new* error against 26.7.7: `nat_source.SNat KEY_PATH 'get' is overridden in SourceNatController and never references ['snatrules', 'rule']`. The release diff also shows `firewall/source_nat: action 'get' now implemented in SourceNatController (was ApiMutableModelControllerBase)`.
 - **#466** is a point-release problem. `staticnatport` first appears in core **26.1.5**, not 26.7: 26.1–26.1.4 lack it and 26.1.5–26.1.11 have it. Against 26.1.11 there is nothing to report. Against **26.1.4** the checker reports `nat_source.SNat FIELD_MISSING field 'static_port' -> 'staticnatport'` ([reports/report-26.1.4.md](reports/report-26.1.4.md)). So to cover a whole series, run the check against the first and the latest point release, or against every one of them.
 
+## What the 26.7.8 run found
+
+Inputs: the collection at `nerrehmit/collection_opnsense` HEAD (7b06551), checked against OPNsense **26.7.8** and diffed against **26.7.7**. The full report is in [reports/report-26.7.8.md](reports/report-26.7.8.md). Nothing was removed or renamed in the endpoints the collection calls. Two changes matter:
+
+| Module | What changed in 26.7.8 |
+|---|---|
+| `ipsec_connection` | The labels of `version` gained "(deprecated)" notes (`IKEv1+IKEv2 (allows deprecated IKEv1)`, `IKEv1 (deprecated)`). The class maps the old labels back (`FIELDS_VALUE_MAPPING_RCV`), so a connection with `version: ikev1+2` (the module default) or `ikev1` is reported as changed on every run. The model default also moved from `0` (IKEv1+IKEv2) to `2` (IKEv2), which doesn't matter here because the module always sends `version`. |
+| `unbound_dnsbl` | The provider `atf` (Abuse.ch ThreatFox IOC) was removed. `providers` has no `choices`, so a playbook that still lists `atf` now gets a validation error from the API. |
+
+The other release changes are additions (`charon.retry_initiate_interval` in IPsec general settings, CSV export/import of Unbound host overrides) and label tweaks.
+
 ## How it works
 
 1. `tool/opn_snapshot.py` reads the OPNsense sources and writes a JSON snapshot:
    - every API controller (`/api/<module>/<controller>/<action>`), with inherited actions resolved through the class chain, its bound model (`$internalModelClass` / `$internalModelName`), the `getBase/addBase/setBase/...` calls in each action, and whether it has a `__call()` fallback
-   - every model XML as a field tree: container / ArrayField / field, type, required, default, and static `OptionValues` (option groups included).
+   - every model XML as a field tree: container / ArrayField / field, type, required, default, and static `OptionValues` with their display labels (option groups included, also the `<optN value="Group label">` form the Unbound blocklist providers use).
 2. `tool/oxl_extract.py` imports the collection, which needs `ansible-core` and `httpx`. For each `module_utils/main` class it records `API_MOD/API_CONT/CMDS/API_KEY_PATH*/FIELDS_*`. It also captures each Ansible module's argument spec (choices included) and the inline `{'module', 'controller', 'command'}` calls, expanding choice- or mapping-driven commands and the `service`/`savepoint` tables.
 3. `tool/oxl_check.py` matches them up the way the OPNsense router does (`snake_case` → `CamelCase`, controller file names are case-sensitive, actions aren't). It reports:
    - `ENDPOINT_MISSING`: a module/controller/action that doesn't exist
@@ -51,10 +62,12 @@ These need a quick look at the module code before fixing.
    - `FIELD_MISSING`: a field the module reads or writes that isn't in the model
    - `CHOICE_INVALID`: an argument choice that isn't in the field's `OptionValues`
    - `REQUIRED_NOT_SET`: a required API field without a default that the module never sends
+   - `LABEL_MISMATCH`: a `FIELDS_VALUE_MAPPING_RCV` value that is neither an option key nor an option label of the field. For option lists keyed `0..n` the API returns a JSON list and the collection reads the selected entry's display label, so a renamed label means existing entries aren't mapped back and the module reports a change on every run (`ipsec_connection.version` on 26.7.8)
    - `HANDLED_IN_CODE` (a note, not an error or warning): one of the findings above that the collection's own code takes care of, with the reason (see below)
    - `EXTRACT_ERROR`: a part of the collection that `oxl_extract.py` couldn't read, so it wasn't checked. It is an ERROR when a class file or a whole call table (the `service` mapping, the savepoint calls) is missing, and a WARN when only one Ansible module couldn't be loaded (currently the retired `alias_purge`). These are listed first in the report, so a run can't pass while part of the collection was skipped.
    - With `--baseline`: what changed between the two releases in the endpoints and models the collection uses, and whether each finding is new.
      A used field that switches between a plain field and a `ModelRelationField` (in either direction) is a WARN, because the module then sends the wrong kind of value (plain value vs. UUID of the linked entry). Other type, required and default changes stay INFO.
+     Removed option values of a used field are a WARN. Changed option labels of a used field are INFO, and a WARN when the class maps that old label in `FIELDS_VALUE_MAPPING_RCV`.
 
 Severity is lowered to WARN wherever the class overrides `search_call`, `get_existing`, `simplify_existing`, `build_request` and so on, because the static view may be wrong there. Those lines end in "verify".
 
