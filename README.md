@@ -50,6 +50,24 @@ Inputs: the collection at `nerrehmit/collection_opnsense` HEAD (7b06551), checke
 
 The other release changes are additions (`charon.retry_initiate_interval` in IPsec general settings, CSV export/import of Unbound host overrides) and label tweaks.
 
+## What the 26.7.9 run found
+
+Inputs: the collection at upstream `O-X-L/ansible-opnsense` `latest` (db38431). Its code is the same as 7b06551, the three newer commits only change docs. It was checked against OPNsense **26.7.9** (released 2026-11-11, core 228ab68, plugins a01a2e8) and diffed against **26.7.8**. The full report is in [reports/report-26.7.9.md](reports/report-26.7.9.md): 43 errors and 15 warnings (26.7.8: 41 and 15). Every 26.7.8 finding is still there, including the `ipsec_connection` `LABEL_MISMATCH`. One change breaks a module:
+
+| Module | What changed in 26.7.9 |
+|---|---|
+| `acme_validation` | os-acme-client 4.18 switched the Selfhost DNS API to an API key ("BREAKING CHANGE" in its changelog). `dns_selfhost_user` and `dns_selfhost_password` were removed and `dns_selfhost_apikey` was added. OPNsense ignores keys that aren't in the model and the class only compares `description` and `method`, so tasks still run, but the old Selfhost options are silently dropped and there is no option for the new key. Other DNS providers aren't affected. |
+
+The other 37 release-diff entries are additions (INFO): 7 ACME DNS providers and a TOTP secret for 1984Hosting, 2 ACME deploy hooks (JetKVM, TrueNAS websocat), Kea DHCPv4 shared networks (`interface`, `match_code`, `match_data`, `match_encoding` on subnets), BGP neighbor `localasoptions` (os-frr 2.1), radvd `nat64prefixLifetime` and syslog destination `suppress`. Two ACME deploy-hook labels changed.
+
+Changes the static check can't see, read from the core diff and not tested on a firewall:
+
+- `trust_ca`: the 26.7.8 regression that rejected a CA without a private key ("Only a single private key is allowed (found 0 sections)", core #11130) is fixed (874c32d).
+- `gateway`: interface-bound dynamic gateways are listed once per address family again, as on 26.7.7 (revert ac08367).
+- `interface_assignment`: on 26.7.6 to 26.7.8, saving one assignment marked every interface without a stored `dhcp6-ia-pd-len` as pending, so the module's `reconfigure` reapplied all of them. 26.7.9 fixes the comparison (25c8736) and adds a unit test that exactly one interface is pending after one change (b214361).
+
+A run against `stable/26.7` (core 8dfb0b7, plugins 2340793, both 2026-11-19) with 26.7.9 as the baseline finds no change in anything the collection uses.
+
 ## How it works
 
 1. `tool/opn_snapshot.py` reads the OPNsense sources and writes a JSON snapshot:
