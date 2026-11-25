@@ -68,6 +68,23 @@ Changes the static check can't see, read from the core diff and not tested on a 
 
 A run against `stable/26.7` (core 8dfb0b7, plugins 2340793, both 2026-11-19) with 26.7.9 as the baseline finds no change in anything the collection uses.
 
+## What the 26.7.10 run found
+
+Inputs: the collection at upstream `O-X-L/ansible-opnsense` `latest` (db38431, unchanged since the 26.7.9 run), checked against OPNsense **26.7.10** (released 2026-11-24, core 4092e30, plugins 6f62c20) and diffed against **26.7.9**. The full report is in [reports/report-26.7.10.md](reports/report-26.7.10.md), and the release summary with the module impact is in [reports/summary-26.7.10.md](reports/summary-26.7.10.md). There are 43 errors and 13 warnings. Apart from the release diff, the findings are exactly the same as on 26.7.9. The two fewer warnings are the 26.7.9 release-diff warnings, which are no longer new. Nothing the collection calls was removed or renamed.
+
+The only release-diff entry is an INFO: the `ids_general` pattern matcher `hs` is now labelled "Vectorscan" instead of "Hyperscan". The key is unchanged.
+
+Changes the static check can't see, read from the core diff and not tested on a firewall:
+
+| Module | What changed in 26.7.10 |
+|---|---|
+| `dhcp_subnet`, `dhcp_reservation` | Kea static reservations registered in Unbound/Dnsmasq now get their domain only from the subnet's `ddns_qualifying_suffix`, no longer from the `domain_name` option (the module's `domain`). Without a suffix they fall back to the system domain. The collection doesn't support `ddns_qualifying_suffix` yet, so it needs an update. |
+| `monit_test` | A migration rewrites `failed link` to `link down`. A task that still says `failed link` reports one change after the upgrade. |
+| `interface_lagg`, `interface_bridge`, `rule_interface_group`, `alias` (geoip) | Validation fixes. A port in two LAGGs, a GRE/loopback bridge member, a group named like an interface key (`lan`, `optN`) and the GeoIP country `EU` are now rejected. |
+| `ids_policy` | A negative `priority` is now rejected (`MinimumValue 0`). |
+
+`stable/26.7` (core = the 26.7.10 tag, plugins f4ad386) has nothing new on top of 26.7.10.
+
 ## How it works
 
 1. `tool/opn_snapshot.py` reads the OPNsense sources and writes a JSON snapshot:
@@ -112,3 +129,4 @@ To follow new releases, run it for each new `26.7.x` tag with the previous tag a
 - It's static. Behaviour inside custom PHP actions is only checked heuristically (for a custom `get`, the keys must at least appear in its body). Dynamic option lists (interfaces, aliases, certificates) aren't compared.
 - Value translations the collection does in code in some other way than the patterns above can still make a `CHOICE_INVALID` a false alarm. Check before fixing.
 - Plugins are compared at the same tag as core (`opnsense/plugins` uses matching tags). A box with an older plugin build may differ.
+- Field limits aren't part of the snapshot: `MinimumValue`/`MaximumValue`, masks, constraints and model PHP validation. Changes there (on 26.7.10, the `ids_policy` priority minimum and the Monit polling interval range) don't show up in the release diff. The same goes for backend behaviour outside the API, such as how Kea reservations are registered in DNS.
